@@ -15,6 +15,10 @@ class Role extends Model
         'id',
     ];
 
+
+    const ADMIN_ROLE_SLUG = 'admin';
+
+
     public function users()
     {
         return $this->belongsToMany(User::class, 'role_users', 'role_id', 'user_id');

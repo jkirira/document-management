@@ -17,7 +17,7 @@ class AdminSeeder extends Seeder
     public function run()
     {
         $adminRole = Role::updateOrCreate(
-                        ['slug' => 'admin'],
+                        ['slug' => Role::ADMIN_ROLE_SLUG],
                         ['name' => 'admin']
                     );
 
