@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api\v1\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserRequest;
 use App\Models\User;
+use App\Notifications\AccountCreated;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UsersController extends Controller
 {
@@ -34,14 +37,25 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param UserRequest $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
         $this->authorize('create', User::class);
 
-        $user = User::create($request->validated());
+        $password = Str::random(8);
+        $user = User::create([
+            'email' => $request->email,
+            'name' => $request->name,
+            'password' => Hash::make($password),
+        ]);
+
+        if ($user) {
+            $user->notify(new AccountCreated(['password' => $password]));
+        }
+
         return response()->json([], Response::HTTP_CREATED);
     }
 
