@@ -18,8 +18,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// admin routes
-Route::prefix('admin')->group(base_path('routes/admin/api.php'));
 
-// client routes
-Route::group([], base_path('routes/client/api.php'));
+Route::prefix('v1')->group(function (){
+
+    // admin routes
+    Route::prefix('admin')->group(base_path('routes/api/v1/admin/index.php'));
+
+    // client routes
+    Route::group([], base_path('routes/api/v1/client/index.php'));
+
+});
