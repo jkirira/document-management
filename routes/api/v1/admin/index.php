@@ -23,6 +23,8 @@ Route::namespace('Api/v1/Admin')->group(function() {
 
         Route::post('/users/{id}', [UsersController::class, 'update']);
 
+        Route::delete('/users/{id}', [UsersController::class, 'destroy']);
+
     });
 
 

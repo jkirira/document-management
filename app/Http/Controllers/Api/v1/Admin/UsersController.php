@@ -115,7 +115,7 @@ class UsersController extends Controller
         $this->authorize('delete', $user);
 
         $user->delete();
-        return response()->json([], Response::HTTP_OK);
+        return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
 }
