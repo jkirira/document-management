@@ -51,12 +51,12 @@ class User extends Authenticatable
     public function isAdmin()
     {
         $adminRole = Role::where('slug', Role::ADMIN_ROLE_SLUG)->first();
-        return $this->roles()->where('id', $adminRole->id)->exists();
+        return $this->roles()->where('role_id', $adminRole->id)->exists();
     }
 
     public function hasRole(Role $role)
     {
-        return $this->roles()->where('id', $role->id)->exists();
+        return $this->roles()->where('role_id', $role->id)->exists();
     }
 
 }
