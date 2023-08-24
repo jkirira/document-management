@@ -98,7 +98,7 @@ class UsersController extends Controller
 
         $this->authorize('update', $user);
 
-        $user = $user->update($request->validated());
+        $user = $user->update($request->all());
         return response()->json([], Response::HTTP_CREATED);
     }
 
