@@ -21,7 +21,7 @@ class UsersController extends Controller
     public function index()
     {
         $this->authorize('viewAny', User::class);
-        return response()->json(User::all(), Response::HTTP_OK);
+        return response()->json(User::with('roles')->get(), Response::HTTP_OK);
     }
 
     /**
@@ -53,7 +53,13 @@ class UsersController extends Controller
         ]);
 
         if ($user) {
+
+            if(isset($request['roles'])) {
+                $user->roles()->sync($request['roles']);
+            }
+
             $user->notify(new AccountCreated(['password' => $password]));
+
         }
 
         return response()->json([], Response::HTTP_CREATED);
@@ -67,7 +73,7 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::with('role')->findOrFail($id);
 
         $this->authorize('view', $user);
 
@@ -98,7 +104,12 @@ class UsersController extends Controller
 
         $this->authorize('update', $user);
 
-        $user = $user->update($request->all());
+        $user->update($request->except(['roles']));
+
+        if(isset($request['roles'])) {
+            $user->roles()->sync($request['roles']);
+        }
+
         return response()->json([], Response::HTTP_CREATED);
     }
 

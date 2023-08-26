@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UserRequest extends FormRequest
 {
@@ -25,7 +26,8 @@ class UserRequest extends FormRequest
     {
         if ($this->id) {
             return [
-                'email' => 'unique:users,email',
+                // ignore this id
+                'email' => Rule::unique('users')->ignore($this->id),
             ];
         } else {
             return [
