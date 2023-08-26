@@ -21,7 +21,7 @@ class Document extends Model
         return $this->belongsToMany(Category::class, 'category_documents');
     }
 
-    public function addedBy()
+    public function owner()
     {
         return $this->belongsTo(User::class, 'added_by');
     }
@@ -34,6 +34,11 @@ class Document extends Model
     public function folder()
     {
         return $this->belongsTo(Folder::class, 'folder_id');
+    }
+
+    public function accessGranters()
+    {
+        return $this->belongsToMany(User::class, 'document_access_granters', 'document_id', 'user_id');
     }
 
 }
