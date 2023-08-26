@@ -31,4 +31,9 @@ class Folder extends Model
         return $this->belongsTo(User::class, 'deleted_by');
     }
 
+    public function parentFolder()
+    {
+        return $this->belongsTo(Folder::class, 'parent_id');
+    }
+
 }
