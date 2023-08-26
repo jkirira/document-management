@@ -28,11 +28,15 @@ class UserRequest extends FormRequest
             return [
                 // ignore this id
                 'email' => Rule::unique('users')->ignore($this->id),
+                'roles' => 'array',
+                'roles.*' => 'exists:roles,id',
             ];
         } else {
             return [
                 'name' => 'required',
                 'email' => 'required|unique:users,email',
+                'roles' => 'array',
+                'roles.*' => 'exists:roles,id',
             ];
         }
     }
