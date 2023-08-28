@@ -40,7 +40,10 @@ class RolesController extends Controller
 
         $this->authorize('update', $role);
 
-        $role->update($request->all());
+        $role->update([
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+        ]);
 
         return response()->json([], Response::HTTP_CREATED);
     }
