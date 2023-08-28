@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RoleRequest extends FormRequest
 {
@@ -23,14 +24,9 @@ class RoleRequest extends FormRequest
      */
     public function rules()
     {
-        if($this->id) {
-            return [
-                'name' => 'required',
-            ];
-        } else {
-            return [
-                'name' => 'required|unique:roles,name',
-            ];
-        }
+        return [
+            'name' => ['required', Rule::unique('roles')->ignore($this->id)->whereNull('deleted_at')],
+        ];
     }
+
 }
