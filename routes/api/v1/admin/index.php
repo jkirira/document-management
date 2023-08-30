@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\Admin\DepartmentsController;
 use App\Http\Controllers\Api\v1\Admin\LoginController;
 use App\Http\Controllers\Api\v1\Admin\RolesController;
 use App\Http\Controllers\Api\v1\Admin\UsersController;
@@ -27,6 +28,12 @@ Route::namespace('Api/v1/Admin')->group(function() {
         Route::get('/roles/{id}', [RolesController::class, 'show']);
         Route::post('/roles/{id}', [RolesController::class, 'update']);
         Route::delete('/roles/{id}', [RolesController::class, 'destroy']);
+
+        Route::get('/departments', [DepartmentsController::class, 'index']);
+        Route::post('/departments', [DepartmentsController::class, 'store']);
+        Route::get('/departments/{department}', [DepartmentsController::class, 'show']);
+        Route::post('/departments/{department}', [DepartmentsController::class, 'update']);
+        Route::delete('/departments/{department}', [DepartmentsController::class, 'destroy']);
 
     });
 
