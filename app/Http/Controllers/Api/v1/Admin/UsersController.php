@@ -6,10 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserRequest;
 use App\Models\User;
 use App\Notifications\AccountCreated;
-use Illuminate\Http\Request;
+use App\Services\UserService;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class UsersController extends Controller
 {
@@ -45,26 +43,13 @@ class UsersController extends Controller
     {
         $this->authorize('create', User::class);
 
-        $password = Str::random(8);
-        $user = User::create([
-            'email' => $request->email,
-            'name' => $request->name,
-            'password' => Hash::make($password),
-        ]);
+        /*
+         * Add Db transaction
+         */
+        $user = (new UserService())->createUser($request->all());
 
         if ($user) {
-
-            if(isset($request['roles'])) {
-                $user->roles()->sync($request['roles']);
-            }
-
-            if(isset($request['department_id'])) {
-                $user->department()->associate($request['department_id']);
-                $user->save();
-            }
-
-            $user->notify(new AccountCreated(['password' => $password]));
-
+            $user->notify(new AccountCreated(['password' => $user->password]));
         }
 
         return response()->json([], Response::HTTP_CREATED);
@@ -109,23 +94,7 @@ class UsersController extends Controller
 
         $this->authorize('update', $user);
 
-        $user->update($request->except(['roles']));
-
-        if(isset($request['roles'])) {
-            $user->roles()->sync($request['roles']);
-        }
-
-        if(isset($request['department_id'])) {
-
-            if(isset($user->department)) {
-               $user->department()->dissociate();
-            }
-
-            $user->department()->associate($request['department_id']);
-
-            $user->save();
-
-        }
+        (new UserService())->updateUser($user, $request->all());
 
         return response()->json([], Response::HTTP_CREATED);
     }
