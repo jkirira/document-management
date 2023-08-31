@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Exists;
 
 class UserRequest extends FormRequest
 {
@@ -24,20 +25,20 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = [
+            'name' => 'required',
+            'email' => 'required|unique:users,email',
+            'roles' => 'array',
+            'roles.*' => [Rule::exists('roles', 'id')->withoutTrashed()],
+            'department_id' => [Rule::exists('departments', 'id')->withoutTrashed()],
+        ];
+
         if ($this->id) {
-            return [
-                // ignore this id
-                'email' => Rule::unique('users')->ignore($this->id),
-                'roles' => 'array',
-                'roles.*' => 'exists:roles,id',
-            ];
-        } else {
-            return [
-                'name' => 'required',
-                'email' => 'required|unique:users,email',
-                'roles' => 'array',
-                'roles.*' => 'exists:roles,id',
-            ];
+            unset($rules['name']);
+            $rules['email'] = [Rule::unique('users')->ignore($this->id)];
         }
+
+        return $rules;
+
     }
 }

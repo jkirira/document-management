@@ -21,7 +21,7 @@ class UsersController extends Controller
     public function index()
     {
         $this->authorize('viewAny', User::class);
-        return response()->json(User::with('roles')->get(), Response::HTTP_OK);
+        return response()->json(User::with(['roles', 'department'])->get(), Response::HTTP_OK);
     }
 
     /**
@@ -58,6 +58,11 @@ class UsersController extends Controller
                 $user->roles()->sync($request['roles']);
             }
 
+            if(isset($request['department_id'])) {
+                $user->department()->associate($request['department_id']);
+                $user->save();
+            }
+
             $user->notify(new AccountCreated(['password' => $password]));
 
         }
@@ -69,11 +74,11 @@ class UsersController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
-        $user = User::with('role')->findOrFail($id);
+        $user = User::with(['roles', 'department'])->findOrFail($id);
 
         $this->authorize('view', $user);
 
@@ -108,6 +113,18 @@ class UsersController extends Controller
 
         if(isset($request['roles'])) {
             $user->roles()->sync($request['roles']);
+        }
+
+        if(isset($request['department_id'])) {
+
+            if(isset($user->department)) {
+               $user->department()->dissociate();
+            }
+
+            $user->department()->associate($request['department_id']);
+
+            $user->save();
+
         }
 
         return response()->json([], Response::HTTP_CREATED);
