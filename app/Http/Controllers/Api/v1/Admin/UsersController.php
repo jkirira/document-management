@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Notifications\AccountCreated;
 use App\Services\UserService;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class UsersController extends Controller
 {
@@ -43,10 +44,11 @@ class UsersController extends Controller
     {
         $this->authorize('create', User::class);
 
-        /*
-         * Add Db transaction
-         */
-        $user = (new UserService())->createUser($request->all());
+        $user = DB::transaction(function () use ($request) {
+
+            return (new UserService())->createUser($request->all());
+
+        });
 
         if ($user) {
             $user->notify(new AccountCreated(['password' => $user->password]));
@@ -94,7 +96,11 @@ class UsersController extends Controller
 
         $this->authorize('update', $user);
 
-        (new UserService())->updateUser($user, $request->all());
+        DB::transaction(function () use ($user, $request) {
+
+            (new UserService())->updateUser($user, $request->all());
+
+        });
 
         return response()->json([], Response::HTTP_CREATED);
     }
@@ -112,6 +118,7 @@ class UsersController extends Controller
         $this->authorize('delete', $user);
 
         $user->delete();
+
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
