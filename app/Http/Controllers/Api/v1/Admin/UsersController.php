@@ -9,6 +9,8 @@ use App\Notifications\AccountCreated;
 use App\Services\UserService;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UsersController extends Controller
 {
@@ -44,14 +46,21 @@ class UsersController extends Controller
     {
         $this->authorize('create', User::class);
 
-        $user = DB::transaction(function () use ($request) {
+        $password = Str::random(8);
+        $user = DB::transaction(function () use ($request, $password) {
 
-            return (new UserService())->createUser($request->all());
+            $userService = new UserService();
+
+            $user = $userService->createUser($request->all());
+
+            $user = $userService->updateUser($user, ['password' => Hash::make($password)]);
+
+            return $user;
 
         });
 
         if ($user) {
-            $user->notify(new AccountCreated(['password' => $user->password]));
+            $user->notify(new AccountCreated(['password' => $password]));
         }
 
         return response()->json([], Response::HTTP_CREATED);

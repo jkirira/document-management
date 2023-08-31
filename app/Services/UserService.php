@@ -6,8 +6,6 @@ namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class UserService
 {
@@ -20,13 +18,10 @@ class UserService
 
     public function createUser($data)
     {
-
-        $password = Str::random(8);
-
         $user = User::create([
             'email' => $data['email'],
             'name' => $data['name'],
-            'password' => Hash::make($password),
+            'department_id' => $data['department_id'],
         ]);
 
         if ($user) {
@@ -35,14 +30,10 @@ class UserService
                 $user->roles()->sync($data['roles']);
             }
 
-            if (isset($data['department_id'])) {
-                $user->department()->associate($data['department_id']);
-                $user->save();
-            }
-
         }
 
         return $user->fresh();
+
     }
 
     public function updateUser(User $user, $data)
