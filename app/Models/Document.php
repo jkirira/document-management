@@ -36,9 +36,9 @@ class Document extends Model
         return $this->belongsTo(Folder::class, 'folder_id');
     }
 
-    public function accessGranters()
+    public function accessManagers()
     {
-        return $this->belongsToMany(User::class, 'document_access_granters', 'document_id', 'user_id');
+        return $this->belongsToMany(User::class, 'document_access_managers', 'document_id', 'user_id');
     }
 
 }
