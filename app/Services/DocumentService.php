@@ -16,32 +16,33 @@ class DocumentService
         $this->document = $document;
     }
 
-    public function saveFileToStorage($file, Folder $folder=null)
+    public function saveFileToStorage($file, $location=null)
     {
-        $path = config('constants.documents.storage_folder', '');
-
-        if (isset($folder)) {
-            $folderPathString = Str::slug($folder->name);
-            $currentFolder = $folder;
-
-            while(isset($currentFolder->parentFolder)) {
-                $folderPathString = Str::slug($currentFolder->parentFolder->name) . '/' . $folderPathString;
-                $currentFolder = $currentFolder->parentFolder;
-            }
-
-            $path =  '/' . $folderPathString;
-
-        }
-
-        return $file->store($path, 'public');
-
+        $storage_location = $location ?? config('constants.documents.storage_folder', '');
+        return $file->store($storage_location, 'public');
     }
 
     public function addNewDocument($file, $input, $owner = null)
     {
         $folder = isset($input['folder_id']) ? Folder::find($input['folder_id']) : null;
 
-        $path = $this->saveFileToStorage($file, $folder);
+        $storage_location = null;
+
+        if (isset($folder)) {
+            $folder_path_string = Str::slug($folder->name);
+            $currentFolder = $folder;
+
+            while(isset($currentFolder->parentFolder)) {
+                $folder_path_string = Str::slug($currentFolder->parentFolder->name) . '/' . $folder_path_string;
+                $currentFolder = $currentFolder->parentFolder;
+            }
+
+            $storage_folder_location = config('constants.documents.storage_folder', '');
+            $storage_location = $storage_folder_location ? $storage_folder_location . '/' . $folder_path_string : $folder_path_string;
+
+        }
+
+        $path = $this->saveFileToStorage($file, $storage_location);
 
         if (!isset($owner)) {
             $owner = auth()->user();
