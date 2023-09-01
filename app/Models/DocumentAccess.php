@@ -16,6 +16,16 @@ class DocumentAccess extends Model
         'id',
     ];
 
+    protected $casts = [
+        'all_departments' => 'boolean',
+        'all_roles' => 'boolean',
+        'update' => 'boolean',
+        'view' => 'boolean',
+        'delete' => 'boolean',
+        'download' => 'boolean',
+        'expired' => 'boolean',
+        'revoked' => 'boolean',
+    ];
 
     const ACCESS_TYPES = [
         'update',

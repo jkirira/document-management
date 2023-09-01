@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Department;
+use App\Models\Document;
 use App\Models\Role;
 use App\Models\User;
 use App\Policies\Admin\DepartmentPolicy;
+use App\Policies\Admin\DocumentPolicy;
 use App\Policies\Admin\RolePolicy;
 use App\Policies\Admin\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -23,6 +25,7 @@ class AuthServiceProvider extends ServiceProvider
          User::class => UserPolicy::class,
          Role::class => RolePolicy::class,
          Department::class => DepartmentPolicy::class,
+         Document::class => DocumentPolicy::class,
     ];
 
     /**

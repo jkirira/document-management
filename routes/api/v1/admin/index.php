@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\Api\v1\Admin\DepartmentsController;
+use App\Http\Controllers\Api\v1\Admin\DocumentsController;
 use App\Http\Controllers\Api\v1\Admin\LoginController;
 use App\Http\Controllers\Api\v1\Admin\RolesController;
 use App\Http\Controllers\Api\v1\Admin\UsersController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
@@ -34,6 +34,9 @@ Route::namespace('Api/v1/Admin')->group(function() {
         Route::get('/departments/{department}', [DepartmentsController::class, 'show']);
         Route::post('/departments/{department}', [DepartmentsController::class, 'update']);
         Route::delete('/departments/{department}', [DepartmentsController::class, 'destroy']);
+
+        Route::get('/documents', [DocumentsController::class, 'index']);
+        Route::post('/documents', [DocumentsController::class, 'store']);
 
     });
 
