@@ -3,8 +3,12 @@
 
 namespace App\Services;
 
+
+use App\Models\Department;
 use App\Models\Document;
 use App\Models\DocumentAccess;
+use App\Models\Role;
+use App\Models\User;
 
 class DocumentAccessService
 {
@@ -26,7 +30,7 @@ class DocumentAccessService
         $access->role_id = isset($values['role_id']) ? $values['role_id'] : null;
         $access->all_roles = isset($values['all_roles']) ? $values['all_roles'] : null;
 
-        foreach(DocumentAccess::ACCESS_TYPES as $accessType) {
+        foreach(DocumentAccess::ACCESS_ABILITIES as $accessType) {
             $value = isset($values[$accessType]) ? (bool)$accessType : false;
             $access->setAttribute($accessType, $value);
         }
@@ -36,6 +40,31 @@ class DocumentAccessService
 
         $access->save();
 
+    }
+
+    public function documentIsAccessibleByEveryone(Document $document, $ability=null)
+    {
+        return Document::accessibleToEveryone($ability)->where('id', $document->id)->exists();
+    }
+
+    public function documentIsAccessibleByDepartment(Document $document, Department $department, $ability=null)
+    {
+        return Document::accessibleToDepartment($department, $ability)->where('id', $document->id)->exists();
+    }
+
+    public function documentIsAccessibleByRole(Document $document, Role $role, $ability=null)
+    {
+        return Document::accessibleToRole($role, $ability)->where('id', $document->id)->exists();
+    }
+
+    public function documentIsAccessibleByRoles(Document $document, Array $roles, $ability=null)
+    {
+        return Document::accessibleToRoles($roles, $ability)->where('id', $document->id)->exists();
+    }
+
+    public function documentIsAccessibleByUser(Document $document, User $user, $ability=null)
+    {
+        return Document::accessibleToUser($user, $ability)->where('id', $document->id)->exists();
     }
 
 }

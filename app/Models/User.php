@@ -52,6 +52,11 @@ class User extends Authenticatable
         return $this->roles()->where('role_id', $adminRole->id)->exists();
     }
 
+    public function isDocumentOwner(Document $document)
+    {
+        return $document->added_by === $this->id;
+    }
+
     public function hasRole(Role $role)
     {
         return $this->roles()->where('role_id', $role->id)->exists();

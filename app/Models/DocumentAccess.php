@@ -27,11 +27,11 @@ class DocumentAccess extends Model
         'revoked' => 'boolean',
     ];
 
-    const ACCESS_TYPES = [
-        'update',
-        'view',
-        'delete',
-        'download',
+    const ACCESS_ABILITIES = [
+        'update' => 'update',
+        'view' => 'view',
+        'delete' => 'delete',
+        'download' => 'download',
     ];
 
 
@@ -68,6 +68,14 @@ class DocumentAccess extends Model
     public function accessRequest()
     {
         return $this->belongsTo(AccessRequest::class, 'access_request_id');
+    }
+
+    public function scopeWithAbilityTo($query, $ability)
+    {
+        if (!in_array($ability, $this::ACCESS_ABILITIES)) {
+            return $query;
+        }
+        return $query->where($ability, true);
     }
 
 }
