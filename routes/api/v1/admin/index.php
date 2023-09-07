@@ -38,6 +38,8 @@ Route::namespace('Api/v1/Admin')->group(function() {
         Route::get('/documents', [DocumentsController::class, 'index']);
         Route::post('/documents', [DocumentsController::class, 'store']);
         Route::get('/documents/{document}', [DocumentsController::class, 'show']);
+        Route::post('/documents/{document}', [DocumentsController::class, 'update']);
+        Route::delete('/documents/{document}', [DocumentsController::class, 'destroy']);
 
     });
 

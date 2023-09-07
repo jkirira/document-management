@@ -60,4 +60,28 @@ class DocumentsController extends Controller
         return response()->json($document, Response::HTTP_OK);
     }
 
+    public function update(DocumentRequest $request, $id)
+    {
+        $document = Document::findOrFail($id);
+
+        $this->authorize('update', $document);
+
+        $document->update([
+            'name' => $request->name,
+        ]);
+
+        return response()->json([], Response::HTTP_CREATED);
+    }
+
+    public function destroy($id)
+    {
+        $document = Document::findOrFail($id);
+
+        $this->authorize('delete', $document);
+
+        $document->delete();
+
+        return response()->json([], Response::HTTP_NO_CONTENT);
+    }
+
 }

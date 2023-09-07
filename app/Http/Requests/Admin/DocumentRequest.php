@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -157,8 +158,10 @@ class DocumentRequest extends FormRequest
         ];
 
 
-        if ($this->id) {
-            $rules['document'] = 'max:2048';
+        if ($this->id || $this->document) {
+            return [
+                'name' => 'required',
+            ];
         }
 
         return $rules;
