@@ -115,11 +115,13 @@ class Document extends Model
                                 ->orWhere(function ($query) use ($department, $roleIds) {
                                     $query->where('all_departments', true)->whereIn('role_id', $roleIds);
                                 })
-                                ->when($department, function ($query, $department) use ($roleIds, $ability) {
+                                ->when($department, function ($query, $department) {
                                     return $query->orWhere(function ($query) use ($department) {
                                                     $query->where('department_id', $department->id)->where('all_roles', true);
-                                                })
-                                                ->orWhere(function ($query) use ($department, $roleIds) {
+                                                });
+                                })
+                                ->when((isset($department) && count($roleIds)), function ($query) use ($department, $roleIds) {
+                                    return $query->orWhere(function ($query) use ($department, $roleIds) {
                                                     $query->where('department_id', $department->id)->whereIn('role_id', $roleIds);
                                                 });
                                 });
