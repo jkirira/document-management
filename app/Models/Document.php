@@ -51,10 +51,10 @@ class Document extends Model
     {
         return $query->whereHas('access', function ($access) use ($ability) {
                         $access->where('all_departments', true)
-                                    ->where('all_roles', true)
-                                    ->when($ability, function ($query, $ability) {
-                                        return $query->withAbilityTo($ability);
-                                    });
+                                ->where('all_roles', true)
+                                ->when($ability, function ($query, $ability) {
+                                    return $query->withAbilityTo($ability);
+                                });
                 });
     }
 
@@ -63,11 +63,11 @@ class Document extends Model
     {
         return $query->whereHas('access', function ($access) use ($department, $ability) {
                         $access->when($ability, function ($query, $ability) {
-                                        return $query->withAbilityTo($ability);
-                                    })
-                                    ->where(function ($query) use ($department) {
-                                        $query->where('all_departments', true)->orWhere('department_id', $department->id);
-                                    });
+                                    return $query->withAbilityTo($ability);
+                                })
+                                ->where(function ($query) use ($department) {
+                                    $query->where('all_departments', true)->orWhere('department_id', $department->id);
+                                });
                 });
     }
 
@@ -76,11 +76,11 @@ class Document extends Model
     {
         return $query->whereHas('access', function ($access) use ($role, $ability) {
                         $access->when($ability, function ($query, $ability) {
-                                        return $query->withAbilityTo($ability);
-                                    })
-                                    ->where(function ($query) use ($role) {
-                                        $query->where('all_roles', true)->orWhere('role_id', $role->id);
-                                    });
+                                    return $query->withAbilityTo($ability);
+                                })
+                                ->where(function ($query) use ($role) {
+                                    $query->where('all_roles', true)->orWhere('role_id', $role->id);
+                                });
                 });
     }
 
@@ -90,11 +90,11 @@ class Document extends Model
         $roleIds = collect($roles)->pluck('id');
         return $query->whereHas('access', function ($access) use ($roleIds, $ability) {
                         $access->when($ability, function ($query, $ability) {
-                                        return $query->withAbilityTo($ability);
-                                    })
-                                    ->where(function ($query) use ($roleIds) {
-                                        $query->where('all_roles', true)->orWhereIn('role_id', $roleIds);
-                                    });
+                                    return $query->withAbilityTo($ability);
+                                })
+                                ->where(function ($query) use ($roleIds) {
+                                    $query->where('all_roles', true)->orWhereIn('role_id', $roleIds);
+                                });
                 });
     }
 
