@@ -31,7 +31,7 @@ class DocumentAccessService
         $access->all_roles = isset($values['all_roles']) ? $values['all_roles'] : null;
 
         foreach(DocumentAccess::ACCESS_ABILITIES as $accessType) {
-            $value = isset($values[$accessType]) ? (bool)$accessType : false;
+            $value = isset($values[$accessType]) ? (bool)$values[$accessType] : false;
             $access->setAttribute($accessType, $value);
         }
 
