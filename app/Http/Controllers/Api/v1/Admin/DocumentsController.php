@@ -53,5 +53,11 @@ class DocumentsController extends Controller
 
     }
 
+    public function show($id)
+    {
+        $document = Document::findOrFail($id);
+        $this->authorize('view', $document);
+        return response()->json($document, Response::HTTP_OK);
+    }
 
 }

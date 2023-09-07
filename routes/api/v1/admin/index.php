@@ -37,6 +37,7 @@ Route::namespace('Api/v1/Admin')->group(function() {
 
         Route::get('/documents', [DocumentsController::class, 'index']);
         Route::post('/documents', [DocumentsController::class, 'store']);
+        Route::get('/documents/{document}', [DocumentsController::class, 'show']);
 
     });
 
