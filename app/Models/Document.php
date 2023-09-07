@@ -109,21 +109,23 @@ class Document extends Model
                         $access->when($ability, function ($query, $ability) {
                                     return $query->withAbilityTo($ability);
                                 })
-                                ->where(function ($query) use ($department) {
-                                    $query->where('all_departments', true)->where('all_roles', true);
-                                })
-                                ->orWhere(function ($query) use ($department, $roleIds) {
-                                    $query->where('all_departments', true)->whereIn('role_id', $roleIds);
-                                })
-                                ->when($department, function ($query, $department) {
-                                    return $query->orWhere(function ($query) use ($department) {
-                                                    $query->where('department_id', $department->id)->where('all_roles', true);
-                                                });
-                                })
-                                ->when((isset($department) && count($roleIds)), function ($query) use ($department, $roleIds) {
-                                    return $query->orWhere(function ($query) use ($department, $roleIds) {
-                                                    $query->where('department_id', $department->id)->whereIn('role_id', $roleIds);
-                                                });
+                                ->where(function ($query) use ($department, $roleIds) {
+                                    $query->where(function ($query) use ($department) {
+                                                $query->where('all_departments', true)->where('all_roles', true);
+                                            })
+                                            ->orWhere(function ($query) use ($department, $roleIds) {
+                                                $query->where('all_departments', true)->whereIn('role_id', $roleIds);
+                                            })
+                                            ->when($department, function ($query, $department) {
+                                                return $query->orWhere(function ($query) use ($department) {
+                                                                $query->where('department_id', $department->id)->where('all_roles', true);
+                                                            });
+                                            })
+                                            ->when((isset($department) && count($roleIds)), function ($query) use ($department, $roleIds) {
+                                                return $query->orWhere(function ($query) use ($department, $roleIds) {
+                                                                $query->where('department_id', $department->id)->whereIn('role_id', $roleIds);
+                                                            });
+                                            });
                                 });
                     });
     }
