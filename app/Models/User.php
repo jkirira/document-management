@@ -62,4 +62,9 @@ class User extends Authenticatable
         return $this->roles()->where('role_id', $role->id)->exists();
     }
 
+    public function canManageDocumentAccess(Document $document)
+    {
+        return $document->accessManagers()->where('user_id', $this->id)->exists();
+    }
+
 }
