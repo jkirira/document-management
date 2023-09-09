@@ -67,4 +67,15 @@ class DocumentAccessService
         return Document::accessibleToUser($user, $ability)->where('id', $document->id)->exists();
     }
 
+    public function revokeAccess(DocumentAccess $access)
+    {
+        $access->revoked = true;
+        $access->revokedBy()->associate(auth()->user());
+        $access->save();
+
+        $access->delete();
+
+    }
+
+
 }

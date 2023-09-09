@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\v1\Admin\DepartmentsController;
+use App\Http\Controllers\Api\v1\Admin\DocumentAccessController;
 use App\Http\Controllers\Api\v1\Admin\DocumentAccessManagersController;
 use App\Http\Controllers\Api\v1\Admin\DocumentsController;
 use App\Http\Controllers\Api\v1\Admin\LoginController;
@@ -46,6 +47,11 @@ Route::namespace('Api/v1/Admin')->group(function() {
         Route::post('/documents/{document}/access-managers', [DocumentAccessManagersController::class, 'store']);
         Route::get('/documents/{document}/access-managers/{id}', [DocumentAccessManagersController::class, 'show']);
         Route::delete('/documents/{document}/access-managers/{id}', [DocumentAccessManagersController::class, 'destroy']);
+
+        Route::get('/documents/{document}/document-access', [DocumentAccessController::class, 'index']);
+        Route::post('/documents/{document}/document-access', [DocumentAccessController::class, 'store']);
+        Route::get('/documents/{document}/document-access/{access}', [DocumentAccessController::class, 'show']);
+        Route::delete('/documents/{document}/document-access/{access}', [DocumentAccessController::class, 'destroy']);
 
     });
 
