@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\DocumentAccessRequest;
+use App\Http\Requests\Admin\UpdateDocumentAccessRequest;
 use App\Models\Document;
 use App\Models\DocumentAccess;
 use App\Services\DocumentAccessService;
@@ -35,6 +36,20 @@ class DocumentAccessController extends Controller
     public function show(Document $document, DocumentAccess $access)
     {
         return response()->json((new DocumentAccessTransformer())->transform($access), Response::HTTP_OK);
+    }
+
+    public function update(UpdateDocumentAccessRequest $request, Document $document, DocumentAccess $access)
+    {
+        Gate::authorize('update-access-managers', $document);
+
+        $accesses = $request->access;
+        $accessService = new DocumentAccessService();
+        foreach ($accesses as $access_values) {
+            $documentAccess = DocumentAccess::findOrFail($access_values['id']);
+            $accessService->updateAccess($documentAccess, $access_values);
+        }
+
+        return response()->json([], Response::HTTP_CREATED);
     }
 
     public function destroy(Document $document, DocumentAccess $access)

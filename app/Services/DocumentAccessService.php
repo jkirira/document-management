@@ -39,6 +39,36 @@ class DocumentAccessService
         $access->grantedBy()->associate($grantedBy);
 
         $access->save();
+        //    `granted_by`,
+
+        //    `access_request_id`,
+        //]
+
+        //    `expired`,
+        //    `expires_at`,
+        //    `revoked`,
+        //    `revoked_at`,
+        //    `revoked_by`,
+
+
+    }
+
+    public function updateAccess(DocumentAccess $access, $values)
+    {
+        $access->department_id = isset($values['department_id']) ? $values['department_id'] : $access->department_id;
+        $access->all_departments = isset($values['all_departments']) ? $values['all_departments'] : $access->all_departments;
+
+        $access->role_id = isset($values['role_id']) ? $values['role_id'] : $access->role_id;
+        $access->all_roles = isset($values['all_roles']) ? $values['all_roles'] : $access->all_roles;
+
+        foreach(DocumentAccess::ACCESS_ABILITIES as $accessType) {
+            $value = isset($values[$accessType]) ? (bool)$values[$accessType] : false;
+            $access->setAttribute($accessType, $value);
+        }
+
+        $access->save();
+
+        return $access;
 
     }
 
