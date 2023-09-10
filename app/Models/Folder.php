@@ -41,4 +41,39 @@ class Folder extends Model
         return $this->hasMany(Folder::class, 'parent_id');
     }
 
+    public function scopeAccessibleToEveryone($query, $ability=null)
+    {
+        return $query->whereHas('documents', function ($documents) use ($ability) {
+                        $documents->accessibleToEveryone($ability);
+                    });
+    }
+
+    public function scopeAccessibleToDepartment($query, $department, $ability=null)
+    {
+        return $query->whereHas('documents', function ($documents) use ($department, $ability) {
+                        $documents->accessibleToDepartment($department, $ability);
+                    });
+    }
+
+    public function scopeAccessibleToRole($query, $role, $ability=null)
+    {
+        return $query->whereHas('documents', function ($documents) use ($role, $ability) {
+                        $documents->accessibleToRole($role, $ability);
+                    });
+    }
+
+    public function scopeAccessibleToRoles($query, $roles, $ability=null)
+    {
+        return $query->whereHas('documents', function ($documents) use ($roles, $ability) {
+                        $documents->accessibleToRoles($roles, $ability);
+                    });
+    }
+
+    public function scopeAccessibleToUser($query, $user, $ability=null)
+    {
+        return $query->whereHas('documents', function ($documents) use ($user, $ability) {
+                        $documents->accessibleToUser($user, $ability);
+                    });
+    }
+
 }
