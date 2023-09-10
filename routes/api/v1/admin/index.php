@@ -40,9 +40,9 @@ Route::namespace('Api/v1/Admin')->group(function() {
 
         Route::get('/documents', [DocumentsController::class, 'index']);
         Route::post('/documents', [DocumentsController::class, 'store']);
-        Route::get('/documents/{document}', [DocumentsController::class, 'show']);
-        Route::post('/documents/{document}', [DocumentsController::class, 'update']);
-        Route::delete('/documents/{document}', [DocumentsController::class, 'destroy']);
+        Route::get('/documents/{id}', [DocumentsController::class, 'show']);
+        Route::post('/documents/{id}', [DocumentsController::class, 'update']);
+        Route::delete('/documents/{id}', [DocumentsController::class, 'destroy']);
 
         Route::get('/documents/{document}/access-managers', [DocumentAccessManagersController::class, 'index']);
         Route::post('/documents/{document}/access-managers', [DocumentAccessManagersController::class, 'store']);

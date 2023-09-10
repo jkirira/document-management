@@ -136,6 +136,10 @@ class DocumentRequest extends FormRequest
         $rules = [
             'name' => 'required',
             'document'  => 'required|max:2048',
+            'folder_id' => [
+                'nullable',
+                Rule::exists('folders', 'id')->withoutTrashed(),
+            ],
             'access' => 'array',
             'access.*.all_departments' => 'boolean',
             'access.*.all_roles' => 'boolean',
@@ -158,7 +162,7 @@ class DocumentRequest extends FormRequest
         ];
 
 
-        if ($this->id || $this->document) {
+        if ($this->id) {
             return [
                 'name' => 'required',
             ];
