@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\v1\Admin\DepartmentsController;
 use App\Http\Controllers\Api\v1\Admin\DocumentAccessController;
 use App\Http\Controllers\Api\v1\Admin\DocumentAccessManagersController;
 use App\Http\Controllers\Api\v1\Admin\DocumentsController;
+use App\Http\Controllers\Api\v1\Admin\FoldersController;
 use App\Http\Controllers\Api\v1\Admin\LoginController;
 use App\Http\Controllers\Api\v1\Admin\RolesController;
 use App\Http\Controllers\Api\v1\Admin\UsersController;
@@ -53,6 +54,12 @@ Route::namespace('Api/v1/Admin')->group(function() {
         Route::get('/documents/{document}/document-access/{access}', [DocumentAccessController::class, 'show']);
         Route::post('/documents/{document}/document-access/update', [DocumentAccessController::class, 'update']);
         Route::delete('/documents/{document}/document-access/{access}', [DocumentAccessController::class, 'destroy']);
+
+        Route::get('/folders', [FoldersController::class, 'index']);
+        Route::post('/folders', [FoldersController::class, 'store']);
+        Route::get('/folders/{folder}', [FoldersController::class, 'show']);
+        Route::post('/folders/{folder}', [FoldersController::class, 'update']);
+        Route::delete('/folders/{folder}', [FoldersController::class, 'destroy']);
 
     });
 

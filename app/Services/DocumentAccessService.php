@@ -97,6 +97,11 @@ class DocumentAccessService
         return Document::accessibleToUser($user, $ability)->where('id', $document->id)->exists();
     }
 
+    public function folderIsAccessibleByUser(Folder $folder, User $user)
+    {
+        return $folder->documents()->accessibleToUser($user, 'view')->exists();
+    }
+
     public function revokeAccess(DocumentAccess $access)
     {
         $access->revoked = true;

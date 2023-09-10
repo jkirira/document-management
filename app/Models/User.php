@@ -57,6 +57,11 @@ class User extends Authenticatable
         return $document->added_by === $this->id;
     }
 
+    public function isFolderOwner(Folder $folder)
+    {
+        return $folder->added_by === $this->id;
+    }
+
     public function hasRole(Role $role)
     {
         return $this->roles()->where('role_id', $role->id)->exists();
