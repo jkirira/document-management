@@ -99,7 +99,49 @@ class DocumentAccessService
 
     public function folderIsAccessibleByUser(Folder $folder, User $user)
     {
-        return Folder::accessibleToUser($user, 'view')->where('id', $folder->id)->exists();
+        $foldersAccessibleByUser = $this->foldersAccessibleByUser($user);
+        return $foldersAccessibleByUser->contains('id', $folder->id);
+    }
+
+    public function foldersAccessibleByUser(User $user)
+    {
+        $folders = Folder::query()
+                        ->whereHas('documents', function ($documents) use ($user) {
+                            $documents->accessibleToUser($user, 'view');
+                        })
+                        ->get();
+
+        $parentFolders = $this->getParentFolders($folders, $folders->pluck('id')->all());
+        $folders = $folders->concat($parentFolders);
+
+        $checkForParentFolders = true;
+        while($checkForParentFolders) {
+            $newParentFolders = $this->getParentFolders($parentFolders, $folders->pluck('id')->all());
+
+            if(count($newParentFolders)) {
+                $folders = $folders->concat($newParentFolders);
+                $parentFolders = $newParentFolders;
+            } else {
+                $checkForParentFolders = false;
+            }
+
+        }
+
+        return $folders;
+
+    }
+
+    private function getParentFolders($childFolders, $folderIdsToIgnore = [])
+    {
+        $parentIds = collect([]);
+
+        $childFolders->each(function($childFolder) use ($parentIds, $folderIdsToIgnore) {
+            if (isset($childFolder->parent_id) && !in_array($childFolder->parent_id, $folderIdsToIgnore)) {
+                $parentIds->push($childFolder->parent_id);
+            }
+        });
+
+        return Folder::whereIn('id', $parentIds)->get();
     }
 
     public function revokeAccess(DocumentAccess $access)

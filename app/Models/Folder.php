@@ -69,11 +69,4 @@ class Folder extends Model
                     });
     }
 
-    public function scopeAccessibleToUser($query, $user, $ability=null)
-    {
-        return $query->whereHas('documents', function ($documents) use ($user, $ability) {
-                        $documents->accessibleToUser($user, $ability);
-                    });
-    }
-
 }
