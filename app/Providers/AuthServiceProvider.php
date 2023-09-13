@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\AccessRequest;
 use App\Models\Department;
 use App\Models\Document;
 use App\Models\Folder;
 use App\Models\Role;
 use App\Models\User;
+use App\Policies\Admin\AccessRequestPolicy;
 use App\Policies\Admin\DepartmentPolicy;
 use App\Policies\Admin\DocumentPolicy;
 use App\Policies\Admin\FolderPolicy;
@@ -29,6 +31,7 @@ class AuthServiceProvider extends ServiceProvider
          Department::class => DepartmentPolicy::class,
          Document::class => DocumentPolicy::class,
          Folder::class => FolderPolicy::class,
+         AccessRequest::class => AccessRequestPolicy::class,
     ];
 
     /**

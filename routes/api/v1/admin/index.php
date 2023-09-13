@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\Admin\AccessRequestController;
 use App\Http\Controllers\Api\v1\Admin\DepartmentsController;
 use App\Http\Controllers\Api\v1\Admin\DocumentAccessController;
 use App\Http\Controllers\Api\v1\Admin\DocumentAccessManagersController;
@@ -67,6 +68,12 @@ Route::namespace('Api/v1/Admin')->group(function() {
         Route::get('/documents/{document}/user-access/{access}', [UserAccessController::class, 'show']);
         Route::post('/documents/{document}/user-access/update', [UserAccessController::class, 'update']);
         Route::delete('/documents/{document}/user-access/{access}', [UserAccessController::class, 'destroy']);
+
+        Route::get('/access-requests', [AccessRequestController::class, 'index']);
+        Route::post('/access-requests', [AccessRequestController::class, 'store']);
+        Route::get('/access-requests/{accessRequest}', [AccessRequestController::class, 'show']);
+        Route::post('/access-requests/{accessRequest}', [AccessRequestController::class, 'update']);
+        Route::delete('/access-requests/{accessRequest}', [AccessRequestController::class, 'destroy']);
 
     });
 
