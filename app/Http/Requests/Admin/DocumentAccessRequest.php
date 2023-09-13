@@ -39,6 +39,7 @@ class DocumentAccessRequest extends FormRequest
                 'required_without:all_roles',
                 'required_if:all_roles,false',
             ],
+            'user_id' => 'prohibited',
             'update' => 'required|boolean',
             'view' => 'required|boolean',
             'delete' => 'required|boolean',

@@ -30,6 +30,8 @@ class DocumentAccessService
         $access->role_id = isset($values['role_id']) ? $values['role_id'] : null;
         $access->all_roles = isset($values['all_roles']) ? $values['all_roles'] : null;
 
+        $access->user_id = isset($values['user_id']) ? $values['user_id'] : null;
+
         foreach(DocumentAccess::ACCESS_ABILITIES as $accessType) {
             $value = isset($values[$accessType]) ? (bool)$values[$accessType] : false;
             $access->setAttribute($accessType, $value);
@@ -60,6 +62,8 @@ class DocumentAccessService
 
         $access->role_id = isset($values['role_id']) ? $values['role_id'] : $access->role_id;
         $access->all_roles = isset($values['all_roles']) ? $values['all_roles'] : $access->all_roles;
+
+//        $access->user_id = isset($values['user_id']) ? $values['user_id'] : $access->user_id;
 
         foreach(DocumentAccess::ACCESS_ABILITIES as $accessType) {
             $value = isset($values[$accessType]) ? (bool)$values[$accessType] : false;

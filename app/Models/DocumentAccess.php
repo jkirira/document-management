@@ -78,4 +78,14 @@ class DocumentAccess extends Model
         return $query->where($ability, true);
     }
 
+    public function scopeNormalAccess($query)
+    {
+        return $query->whereNull('user_id');
+    }
+
+    public function scopeSpecialUserAccess($query)
+    {
+        return $query->whereNotNull('user_id');
+    }
+
 }

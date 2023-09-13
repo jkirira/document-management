@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests\Admin;
 
-use App\Rules\IsNormalAccess;
-use Illuminate\Validation\Rule;
+use App\Rules\IsSpecialUserAccess;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateDocumentAccessRequest extends FormRequest
+class UserAccessRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,26 +27,19 @@ class UpdateDocumentAccessRequest extends FormRequest
     {
         $rules = [
             'access' => 'array',
+            'access.*.all_roles' => 'prohibited',  // should not be,
+            'access.*.all_departments' => 'prohibited',  // should not be,
+            'access.*.department_id' => 'prohibited',   // should not be
+            'access.*.role_id' => 'prohibited', // should not be
             'access.*.id' => [
-                'required',
+//                'required',
                 Rule::exists('document_access', 'id')->withoutTrashed(),
-                new IsNormalAccess,
+                new IsSpecialUserAccess,
             ],
-            'access.*.all_roles' => 'boolean',
-            'access.*.all_departments' => 'boolean',
-            'access.*.department_id' => [
-                'nullable',
-                Rule::exists('departments', 'id')->withoutTrashed(),
-                'required_without:access.*.all_departments',
-                'required_if:access.*.all_departments,false',
+            'access.*.user_id' => [
+                'required_without:access.*.id',
+                Rule::exists('users', 'id')->withoutTrashed(),
             ],
-            'access.*.role_id' => [
-                'nullable',
-                Rule::exists('roles', 'id')->withoutTrashed(),
-                'required_without:access.*.all_roles',
-                'required_if:access.*.all_roles,false',
-            ],
-            'access.*.user_id' => 'prohibited',
             'access.*.update' => 'required|boolean',
             'access.*.view' => 'required|boolean',
             'access.*.delete' => 'required|boolean',

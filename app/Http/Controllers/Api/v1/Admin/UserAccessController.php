@@ -3,36 +3,38 @@
 namespace App\Http\Controllers\Api\v1\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\DocumentAccessRequest;
-use App\Http\Requests\Admin\UpdateDocumentAccessRequest;
+use App\Http\Requests\Admin\UserAccessRequest;
 use App\Models\Document;
 use App\Models\DocumentAccess;
 use App\Services\DocumentAccessService;
-use App\Transformers\Admin\DocumentAccessTransformer;
+use App\Transformers\Admin\UserAccessTransformer;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
-class DocumentAccessController extends Controller
+class UserAccessController extends Controller
 {
     public function index(Document $document)
     {
         // add maybe only admin authorization
-        $documentAccess = $document->access()
-                                    ->normalAccess()
-                                    ->get()
-                                    ->map(function($access) {
-                                        return (new DocumentAccessTransformer())->transform($access);
-                                    });
+        $userAccess = $document->access()
+                                ->specialUserAccess()
+                                ->get()
+                                ->map(function($access) {
+                                    return (new UserAccessTransformer())->transform($access);
+                                });
 
-        return response()->json($documentAccess, Response::HTTP_OK);
+        return response()->json($userAccess, Response::HTTP_OK);
     }
 
-    public function store(DocumentAccessRequest $request, Document $document)
+    public function store(UserAccessRequest $request, Document $document)
     {
         Gate::authorize('grant-document-access', $document);
 
-        $input = $request->all();
-        (new DocumentAccessService())->grantAccess($document, $input);
+        $accesses = $request->access;
+        $accessService = new DocumentAccessService();
+        foreach ($accesses as $access_values) {
+            $accessService->grantAccess($document, $access_values);
+        }
 
         return response()->json([], Response::HTTP_CREATED);
     }
@@ -40,11 +42,11 @@ class DocumentAccessController extends Controller
     public function show(Document $document, DocumentAccess $access)
     {
         // add maybe only admin authorization
-        $document->access()->normalAccess()->findOrFail($access->id);
-        return response()->json((new DocumentAccessTransformer())->transform($access), Response::HTTP_OK);
+        $document->access()->specialUserAccess()->findOrFail($access->id);
+        return response()->json((new UserAccessTransformer())->transform($access), Response::HTTP_OK);
     }
 
-    public function update(UpdateDocumentAccessRequest $request, Document $document)
+    public function update(UserAccessRequest $request, Document $document)
     {
         Gate::authorize('grant-document-access', $document);
 
@@ -62,7 +64,7 @@ class DocumentAccessController extends Controller
     {
         Gate::authorize('grant-document-access', $document);
 
-        $document->access()->normalAccess()->findOrFail($access->id);
+        $document->access()->specialUserAccess()->findOrFail($access->id);
 
         (new DocumentAccessService())->revokeAccess($access);
 

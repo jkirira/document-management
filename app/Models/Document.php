@@ -105,16 +105,19 @@ class Document extends Model
         $roleIds = $user->roles->pluck('id');
 
         return $query->where('added_by', $user->id)
-                    ->orWhereHas('access', function ($access) use ($department, $roleIds, $ability) {
+                    ->orWhereHas('access', function ($access) use ($department, $roleIds, $user, $ability) {
                         $access->when($ability, function ($query, $ability) {
                                     return $query->withAbilityTo($ability);
                                 })
-                                ->where(function ($query) use ($department, $roleIds) {
+                                ->where(function ($query) use ($department, $roleIds, $user) {
                                     $query->where(function ($query) use ($department) {
                                                 $query->where('all_departments', true)->where('all_roles', true);
                                             })
                                             ->orWhere(function ($query) use ($department, $roleIds) {
                                                 $query->where('all_departments', true)->whereIn('role_id', $roleIds);
+                                            })
+                                            ->orWhere(function ($query) use ($user) {
+                                                $query->where('user_id', $user->id);
                                             })
                                             ->when($department, function ($query, $department) {
                                                 return $query->orWhere(function ($query) use ($department) {

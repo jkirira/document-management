@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\v1\Admin\DocumentsController;
 use App\Http\Controllers\Api\v1\Admin\FoldersController;
 use App\Http\Controllers\Api\v1\Admin\LoginController;
 use App\Http\Controllers\Api\v1\Admin\RolesController;
+use App\Http\Controllers\Api\v1\Admin\UserAccessController;
 use App\Http\Controllers\Api\v1\Admin\UsersController;
 use Illuminate\Support\Facades\Route;
 
@@ -60,6 +61,12 @@ Route::namespace('Api/v1/Admin')->group(function() {
         Route::get('/folders/{folder}', [FoldersController::class, 'show']);
         Route::post('/folders/{folder}', [FoldersController::class, 'update']);
         Route::delete('/folders/{folder}', [FoldersController::class, 'destroy']);
+
+        Route::get('/documents/{document}/user-access', [UserAccessController::class, 'index']);
+        Route::post('/documents/{document}/user-access', [UserAccessController::class, 'store']);
+        Route::get('/documents/{document}/user-access/{access}', [UserAccessController::class, 'show']);
+        Route::post('/documents/{document}/user-access/update', [UserAccessController::class, 'update']);
+        Route::delete('/documents/{document}/user-access/{access}', [UserAccessController::class, 'destroy']);
 
     });
 
