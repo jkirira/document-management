@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Models\Department;
 use App\Models\Document;
 use App\Models\DocumentAccess;
+use App\Models\Folder;
 use App\Models\Role;
 use App\Models\User;
 
