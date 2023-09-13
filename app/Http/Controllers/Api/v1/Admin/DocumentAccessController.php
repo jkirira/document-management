@@ -16,6 +16,7 @@ class DocumentAccessController extends Controller
 {
     public function index(Document $document)
     {
+        // add maybe only admin authorization
         $documentAccess = $document->access->map(function($access) {
                             return (new DocumentAccessTransformer())->transform($access);
                         });
@@ -35,12 +36,13 @@ class DocumentAccessController extends Controller
 
     public function show(Document $document, DocumentAccess $access)
     {
+        // add maybe only admin authorization
         return response()->json((new DocumentAccessTransformer())->transform($access), Response::HTTP_OK);
     }
 
     public function update(UpdateDocumentAccessRequest $request, Document $document, DocumentAccess $access)
     {
-        Gate::authorize('update-access-managers', $document);
+        Gate::authorize('grant-document-access', $document);
 
         $accesses = $request->access;
         $accessService = new DocumentAccessService();
