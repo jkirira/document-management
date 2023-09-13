@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\v1\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\DocumentRequest;
 use App\Models\Document;
-use App\Models\Role;
 use App\Services\DocumentAccessService;
 use App\Services\DocumentService;
 use Illuminate\Http\Response;
@@ -23,7 +22,7 @@ class DocumentsController extends Controller
 
     public function index()
     {
-        $this->authorize('viewAny', Role::class);
+        $this->authorize('viewAny', Document::class);
         return response()->json(Document::all(), Response::HTTP_OK);
     }
 
