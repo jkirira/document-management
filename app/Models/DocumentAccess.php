@@ -88,4 +88,11 @@ class DocumentAccess extends Model
         return $query->whereNotNull('user_id');
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where(function ($query) {
+            $query->whereNull('revoked')->orWhere('revoked', 0);
+        });
+    }
+
 }

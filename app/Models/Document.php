@@ -52,6 +52,7 @@ class Document extends Model
         return $query->whereHas('access', function ($access) use ($ability) {
                         $access->where('all_departments', true)
                                 ->where('all_roles', true)
+                                ->active()
                                 ->when($ability, function ($query, $ability) {
                                     return $query->withAbilityTo($ability);
                                 });
@@ -62,7 +63,8 @@ class Document extends Model
     public function scopeAccessibleToDepartment($query, $department, $ability=null)
     {
         return $query->whereHas('access', function ($access) use ($department, $ability) {
-                        $access->when($ability, function ($query, $ability) {
+                        $access->active()
+                                ->when($ability, function ($query, $ability) {
                                     return $query->withAbilityTo($ability);
                                 })
                                 ->where(function ($query) use ($department) {
@@ -75,7 +77,8 @@ class Document extends Model
     public function scopeAccessibleToRole($query, $role, $ability=null)
     {
         return $query->whereHas('access', function ($access) use ($role, $ability) {
-                        $access->when($ability, function ($query, $ability) {
+                        $access->active()
+                                ->when($ability, function ($query, $ability) {
                                     return $query->withAbilityTo($ability);
                                 })
                                 ->where(function ($query) use ($role) {
@@ -89,7 +92,8 @@ class Document extends Model
     {
         $roleIds = collect($roles)->pluck('id');
         return $query->whereHas('access', function ($access) use ($roleIds, $ability) {
-                        $access->when($ability, function ($query, $ability) {
+                        $access->active()
+                                ->when($ability, function ($query, $ability) {
                                     return $query->withAbilityTo($ability);
                                 })
                                 ->where(function ($query) use ($roleIds) {
@@ -106,7 +110,8 @@ class Document extends Model
 
         return $query->where('added_by', $user->id)
                     ->orWhereHas('access', function ($access) use ($department, $roleIds, $user, $ability) {
-                        $access->when($ability, function ($query, $ability) {
+                        $access->active()
+                                ->when($ability, function ($query, $ability) {
                                     return $query->withAbilityTo($ability);
                                 })
                                 ->where(function ($query) use ($department, $roleIds, $user) {
