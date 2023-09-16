@@ -10,6 +10,7 @@ use App\Models\DocumentAccess;
 use App\Services\DocumentAccessService;
 use App\Transformers\Admin\DocumentAccessTransformer;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class DocumentAccessController extends Controller
@@ -44,16 +45,15 @@ class DocumentAccessController extends Controller
         return response()->json((new DocumentAccessTransformer())->transform($access), Response::HTTP_OK);
     }
 
-    public function update(UpdateDocumentAccessRequest $request, Document $document)
+    public function update(DocumentAccessRequest $request, Document $document, $id)
     {
         Gate::authorize('grant-document-access', $document);
 
-        $accesses = $request->access;
-        $accessService = new DocumentAccessService();
-        foreach ($accesses as $access_values) {
-            $documentAccess = DocumentAccess::findOrFail($access_values['id']);
-            $accessService->updateAccess($documentAccess, $access_values);
-        }
+        $input = $request->all();
+
+        $documentAccess = $document->access()->normalAccess()->findOrFail($id);
+
+        (new DocumentAccessService())->updateAccess($documentAccess, $input);
 
         return response()->json([], Response::HTTP_CREATED);
     }
@@ -67,6 +67,26 @@ class DocumentAccessController extends Controller
         $access->delete();
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function updateDocumentAccess(UpdateDocumentAccessRequest $request, Document $document)
+    {
+        Gate::authorize('grant-document-access', $document);
+
+        $accessService = new DocumentAccessService();
+
+        DB::transaction(function () use ($request,  $document, $accessService) {
+            $accesses = $request->access;
+
+            foreach ($accesses as $access_values) {
+//            $documentAccess = DocumentAccess::findOrFail($access_values['id']);
+                $documentAccess = $document->access()->normalAccess()->findOrFail($access_values['id']);
+                $accessService->updateAccess($documentAccess, $access_values);
+            }
+
+        });
+
+        return response()->json([], Response::HTTP_CREATED);
     }
 
     public function revoke(Document $document, DocumentAccess $access)
