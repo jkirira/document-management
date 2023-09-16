@@ -66,9 +66,20 @@ class UserAccessController extends Controller
 
         $access = $document->access()->specialUserAccess()->findOrFail($id);
 
-        (new DocumentAccessService())->revokeAccess($access);
+        $access->delete();
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function revoke(Document $document, $id)
+    {
+        Gate::authorize('grant-document-access', $document);
+
+        $access = $document->access()->specialUserAccess()->findOrFail($id);
+
+        (new DocumentAccessService())->revokeAccess($access);
+
+        return response()->json(null, Response::HTTP_OK);
     }
 
 }
