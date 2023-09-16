@@ -42,10 +42,8 @@ class DocumentAccessService
         $access->grantedBy()->associate($grantedBy);
 
         $access->save();
-        //    `granted_by`,
 
-        //    `access_request_id`,
-        //]
+        return $access;
 
         //    `expired`,
         //    `expires_at`,

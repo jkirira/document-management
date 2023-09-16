@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AccessRequestRequest;
 use App\Models\AccessRequest;
 use App\Notifications\AccessRequestGranted;
+use App\Notifications\AccessRequestMade;
 use App\Notifications\AccessRequestRejected;
 use App\Services\AccessRequestService;
 use App\Services\DocumentAccessService;
@@ -34,7 +35,21 @@ class AccessRequestController extends Controller
         $this->authorize('create', AccessRequest::class);
 
         $input = $request->all();
-        (new AccessRequestService())->addNewAccessRequest($input);
+        $accessRequest = (new AccessRequestService())->addNewAccessRequest($input);
+
+        // send notifications
+        $accessRequest->load(['document.owner', 'document.accessManagers']);
+
+        $accessManagers = $accessRequest->document->accessManagers;
+        $documentOwner = $accessRequest->document->owner;
+
+        $notificationRecipients = collect($accessManagers)
+                                        ->push($documentOwner)
+                                        ->unique('email');
+
+        foreach ($notificationRecipients as $recipient) {
+            $recipient->notify(new AccessRequestMade($accessRequest));
+        }
 
         return response()->json([], Response::HTTP_CREATED);
     }
