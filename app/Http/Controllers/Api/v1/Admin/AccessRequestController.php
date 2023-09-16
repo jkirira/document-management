@@ -65,9 +65,8 @@ class AccessRequestController extends Controller
     {
         $this->authorize('update', $accessRequest);
 
-        $accessRequest->update([
-            'description' => isset($request->description) ? $request->description : $accessRequest->description,
-        ]);
+        $input = $request->all();
+        $accessRequest = (new AccessRequestService())->updateAccess($accessRequest, $input);
 
         return response()->json([], Response::HTTP_CREATED);
     }
@@ -92,6 +91,7 @@ class AccessRequestController extends Controller
             $access_values = [
                 'user_id' => $accessRequest->requested_by,
                 'view' => true,
+                'expires_at' => $accessRequest->expiry_time,
             ];
 
             $access = (new DocumentAccessService())->grantAccess($document, $access_values);

@@ -95,4 +95,11 @@ class DocumentAccess extends Model
         });
     }
 
+    public function scopeNotExpired($query)
+    {
+        return $query->where(function ($query) {
+            $query->whereNull('expired')->orWhere('expired', 0);
+        });
+    }
+
 }

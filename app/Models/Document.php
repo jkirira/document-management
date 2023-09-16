@@ -53,6 +53,7 @@ class Document extends Model
                         $access->where('all_departments', true)
                                 ->where('all_roles', true)
                                 ->active()
+                                ->notExpired()
                                 ->when($ability, function ($query, $ability) {
                                     return $query->withAbilityTo($ability);
                                 });
@@ -64,6 +65,7 @@ class Document extends Model
     {
         return $query->whereHas('access', function ($access) use ($department, $ability) {
                         $access->active()
+                                ->notExpired()
                                 ->when($ability, function ($query, $ability) {
                                     return $query->withAbilityTo($ability);
                                 })
@@ -78,6 +80,7 @@ class Document extends Model
     {
         return $query->whereHas('access', function ($access) use ($role, $ability) {
                         $access->active()
+                                ->notExpired()
                                 ->when($ability, function ($query, $ability) {
                                     return $query->withAbilityTo($ability);
                                 })
@@ -93,6 +96,7 @@ class Document extends Model
         $roleIds = collect($roles)->pluck('id');
         return $query->whereHas('access', function ($access) use ($roleIds, $ability) {
                         $access->active()
+                                ->notExpired()
                                 ->when($ability, function ($query, $ability) {
                                     return $query->withAbilityTo($ability);
                                 })
@@ -111,6 +115,7 @@ class Document extends Model
         return $query->where('added_by', $user->id)
                     ->orWhereHas('access', function ($access) use ($department, $roleIds, $user, $ability) {
                         $access->active()
+                                ->notExpired()
                                 ->when($ability, function ($query, $ability) {
                                     return $query->withAbilityTo($ability);
                                 })

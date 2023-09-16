@@ -33,6 +33,8 @@ class DocumentAccessService
 
         $access->user_id = isset($values['user_id']) ? $values['user_id'] : null;
 
+        $access->expires_at = isset($values['expires_at']) ? $values['expires_at'] : null;
+
         foreach(DocumentAccess::ACCESS_ABILITIES as $accessType) {
             $value = isset($values[$accessType]) ? (bool)$values[$accessType] : false;
             $access->setAttribute($accessType, $value);
@@ -63,6 +65,8 @@ class DocumentAccessService
         $access->all_roles = isset($values['all_roles']) ? $values['all_roles'] : $access->all_roles;
 
 //        $access->user_id = isset($values['user_id']) ? $values['user_id'] : $access->user_id;
+
+        $access->expires_at = isset($values['expires_at']) ? $values['expires_at'] : $access->expires_at;
 
         foreach(DocumentAccess::ACCESS_ABILITIES as $accessType) {
             $value = isset($values[$accessType]) ? (bool)$values[$accessType] : false;
