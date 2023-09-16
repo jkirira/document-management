@@ -66,9 +66,9 @@ Route::namespace('Api/v1/Admin')->group(function() {
 
         Route::get('/documents/{document}/user-access', [UserAccessController::class, 'index']);
         Route::post('/documents/{document}/user-access', [UserAccessController::class, 'store']);
-        Route::get('/documents/{document}/user-access/{access}', [UserAccessController::class, 'show']);
+        Route::get('/documents/{document}/user-access/{id}', [UserAccessController::class, 'show']);
         Route::post('/documents/{document}/user-access/update', [UserAccessController::class, 'update']);
-        Route::delete('/documents/{document}/user-access/{access}', [UserAccessController::class, 'destroy']);
+        Route::delete('/documents/{document}/user-access/{id}', [UserAccessController::class, 'destroy']);
 
         Route::get('/access-requests', [AccessRequestController::class, 'index']);
         Route::post('/access-requests', [AccessRequestController::class, 'store']);

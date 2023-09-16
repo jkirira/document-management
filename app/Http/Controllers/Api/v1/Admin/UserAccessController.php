@@ -39,10 +39,10 @@ class UserAccessController extends Controller
         return response()->json([], Response::HTTP_CREATED);
     }
 
-    public function show(Document $document, DocumentAccess $access)
+    public function show(Document $document, $id)
     {
         // add maybe only admin authorization
-        $document->access()->specialUserAccess()->findOrFail($access->id);
+        $access = $document->access()->specialUserAccess()->findOrFail($id);
         return response()->json((new UserAccessTransformer())->transform($access), Response::HTTP_OK);
     }
 
@@ -60,11 +60,11 @@ class UserAccessController extends Controller
         return response()->json([], Response::HTTP_CREATED);
     }
 
-    public function destroy(Document $document, DocumentAccess $access)
+    public function destroy(Document $document, $id)
     {
         Gate::authorize('grant-document-access', $document);
 
-        $document->access()->specialUserAccess()->findOrFail($access->id);
+        $access = $document->access()->specialUserAccess()->findOrFail($id);
 
         (new DocumentAccessService())->revokeAccess($access);
 
