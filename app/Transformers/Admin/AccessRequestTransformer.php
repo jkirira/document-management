@@ -20,6 +20,7 @@ class AccessRequestTransformer
             'description' => $accessRequest->description,
             'granted' => (bool)$accessRequest->granted,
             'granted_by' => $accessRequest->grantedBy,
+            'rejected' => (bool)$accessRequest->rejected,
             'rejected_by' => $accessRequest->rejectedBy,
             'rejected_reason' => $accessRequest->rejected_reason,
         ];

@@ -74,6 +74,8 @@ Route::namespace('Api/v1/Admin')->group(function() {
         Route::get('/access-requests/{accessRequest}', [AccessRequestController::class, 'show']);
         Route::post('/access-requests/{accessRequest}', [AccessRequestController::class, 'update']);
         Route::delete('/access-requests/{accessRequest}', [AccessRequestController::class, 'destroy']);
+        Route::post('/access-requests/{accessRequest}/approve', [AccessRequestController::class, 'approve']);
+        Route::post('/access-requests/{accessRequest}/reject', [AccessRequestController::class, 'reject']);
 
     });
 

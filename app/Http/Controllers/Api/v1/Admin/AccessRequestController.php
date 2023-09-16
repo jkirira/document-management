@@ -5,9 +5,15 @@ namespace App\Http\Controllers\Api\v1\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AccessRequestRequest;
 use App\Models\AccessRequest;
+use App\Notifications\AccessRequestGranted;
+use App\Notifications\AccessRequestRejected;
 use App\Services\AccessRequestService;
+use App\Services\DocumentAccessService;
 use App\Transformers\Admin\AccessRequestTransformer;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class AccessRequestController extends Controller
 {
@@ -58,6 +64,55 @@ class AccessRequestController extends Controller
         $accessRequest->delete();
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function approve(Request $request, AccessRequest $accessRequest)
+    {
+        Gate::authorize('approve-access-request', $accessRequest);
+
+        $accessRequest = DB::transaction(function () use ($accessRequest) {
+
+            $document = $accessRequest->document;
+
+            $access_values = [
+                'user_id' => $accessRequest->requested_by,
+                'view' => true,
+            ];
+
+            $access = (new DocumentAccessService())->grantAccess($document, $access_values);
+            $access->accessRequest()->associate($accessRequest);
+
+            $accessRequest->update([
+                'granted' => true,
+                'granted_by' => auth()->id(),
+            ]);
+
+            return $accessRequest;
+
+        });
+
+        if (isset($accessRequest->requestedBy)) {
+            $accessRequest->requestedBy->notify(new AccessRequestGranted($accessRequest->refresh()));
+        }
+
+        return response()->json([], Response::HTTP_CREATED);
+    }
+
+    public function reject(Request $request, AccessRequest $accessRequest)
+    {
+        Gate::authorize('reject-access-request', $accessRequest);
+
+        $accessRequest->update([
+            'rejected' => true,
+            'rejected_by' => auth()->id(),
+            'rejected_reason' => $request->rejected_reason,
+        ]);
+
+        if (isset($accessRequest->requestedBy)) {
+            $accessRequest->requestedBy->notify(new AccessRequestRejected($accessRequest->refresh()));
+        }
+
+        return response()->json([], Response::HTTP_OK);
     }
 
 }

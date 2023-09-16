@@ -53,5 +53,31 @@ class AuthServiceProvider extends ServiceProvider
                     $user->canManageDocumentAccess($document);
         });
 
+        Gate::define('approve-access-request', function (User $user, AccessRequest $accessRequest) {
+            $document = $accessRequest->document;
+            $userIsNotRequestingUser = $user->id !== $accessRequest->requested_by;
+            $userCanApproveRequest = ($user->isAdmin() || $user->isDocumentOwner($document) || $user->canManageDocumentAccess($document));
+
+            return (bool)(
+                !$accessRequest->granted &&
+                !$accessRequest->rejected &&
+                $userIsNotRequestingUser &&
+                $userCanApproveRequest
+            );
+        });
+
+        Gate::define('reject-access-request', function (User $user, AccessRequest $accessRequest) {
+            $document = $accessRequest->document;
+            $userIsNotRequestingUser = $user->id !== $accessRequest->requested_by;
+            $userCanApproveRequest = ($user->isAdmin() || $user->isDocumentOwner($document) || $user->canManageDocumentAccess($document));
+
+            return (bool)(
+                !$accessRequest->granted &&
+                !$accessRequest->rejected &&
+                $userIsNotRequestingUser &&
+                $userCanApproveRequest
+            );
+        });
+
     }
 }
