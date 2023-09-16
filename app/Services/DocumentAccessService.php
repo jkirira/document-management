@@ -10,6 +10,7 @@ use App\Models\DocumentAccess;
 use App\Models\Folder;
 use App\Models\Role;
 use App\Models\User;
+use Carbon\Carbon;
 
 class DocumentAccessService
 {
@@ -46,13 +47,6 @@ class DocumentAccessService
         $access->save();
 
         return $access;
-
-        //    `expired`,
-        //    `expires_at`,
-        //    `revoked`,
-        //    `revoked_at`,
-        //    `revoked_by`,
-
 
     }
 
