@@ -151,9 +151,10 @@ class DocumentAccessService
     {
         $access->revoked = true;
         $access->revokedBy()->associate(auth()->user());
+        $access->revoked_at = Carbon::now();
         $access->save();
 
-        $access->delete();
+        return $access;
 
     }
 

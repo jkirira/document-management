@@ -62,11 +62,22 @@ class DocumentAccessController extends Controller
     {
         Gate::authorize('grant-document-access', $document);
 
-        $document->access()->normalAccess()->findOrFail($access->id);
+        $access = $document->access()->normalAccess()->findOrFail($access->id);
+
+        $access->delete();
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function revoke(Document $document, DocumentAccess $access)
+    {
+        Gate::authorize('grant-document-access', $document);
+
+        $access = $document->access()->normalAccess()->findOrFail($access->id);
 
         (new DocumentAccessService())->revokeAccess($access);
 
-        return response()->json(null, Response::HTTP_NO_CONTENT);
+        return response()->json(null, Response::HTTP_OK);
     }
 
 }
