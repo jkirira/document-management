@@ -8,7 +8,6 @@ use App\Services\DocumentAccessService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Comment\Doc;
 
 class RevokeExpiredAccess extends Command
 {
@@ -48,6 +47,8 @@ class RevokeExpiredAccess extends Command
         $after = $this->option('after') ?? Carbon::now();
 
         $expiredAccesses = DocumentAccess::with(['user', 'document'])
+                                        ->active()
+                                        ->notExpired()
                                         ->where('expires_at', '<=', $after)
                                         ->get();
 
