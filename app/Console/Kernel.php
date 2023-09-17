@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\RevokeExpiredAccess;
+use App\Console\Commands\SendAccessExpiringReminders;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -21,6 +22,17 @@ class Kernel extends ConsoleKernel
                     ->everyMinute()
                     ->withoutOverlapping()
                     ->runInBackground();
+
+        $schedule->command(SendAccessExpiringReminders::class, ['--six-hour-reminders'])
+                ->everyMinute()
+                ->withoutOverlapping()
+                ->runInBackground();
+
+        $schedule->command(SendAccessExpiringReminders::class, ['--twelve-hour-reminders'])
+                ->everyMinute()
+                ->withoutOverlapping()
+                ->runInBackground();
+
     }
 
     /**
