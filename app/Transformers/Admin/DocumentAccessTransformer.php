@@ -25,6 +25,12 @@ class DocumentAccessTransformer
                                 'name' => $documentAccess->role->name,
                             ]
                         : null,
+            'user' => isset($documentAccess->user)
+                        ?   [
+                                'id' => $documentAccess->user_id,
+                                'name' => $documentAccess->user->name,
+                            ]
+                        : null,
             'all_departments' => (bool)$documentAccess->all_departments,
             'all_roles' => (bool)$documentAccess->all_roles,
             'update' => (bool)$documentAccess->update,
