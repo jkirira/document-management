@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\v1\Admin\AccessRequestController;
 use App\Http\Controllers\Api\v1\Admin\DepartmentsController;
 use App\Http\Controllers\Api\v1\Admin\DocumentAccessController;
 use App\Http\Controllers\Api\v1\Admin\DocumentAccessManagersController;
+use App\Http\Controllers\Api\v1\Admin\DocumentHistoryController;
 use App\Http\Controllers\Api\v1\Admin\DocumentsController;
 use App\Http\Controllers\Api\v1\Admin\FoldersController;
 use App\Http\Controllers\Api\v1\Admin\LoginController;
@@ -79,6 +80,9 @@ Route::namespace('Api/v1/Admin')->group(function() {
         Route::delete('/access-requests/{accessRequest}', [AccessRequestController::class, 'destroy']);
         Route::post('/access-requests/{accessRequest}/approve', [AccessRequestController::class, 'approve']);
         Route::post('/access-requests/{accessRequest}/reject', [AccessRequestController::class, 'reject']);
+
+        Route::get('/documents/history', [DocumentHistoryController::class, 'index']);
+        Route::get('/documents/{id}/history', [DocumentHistoryController::class, 'show']);
 
     });
 
