@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\User;
 class AccessRequestService
 {
 
-    public function addNewAccessRequest ($input, User $requestedBy=null)
+    public function addNewAccessRequest($input, User $requestedBy=null)
     {
         $document = DocumentAccess::findOrFail($input['document_id']);
 
@@ -39,16 +39,19 @@ class AccessRequestService
 
     public function updateAccess(AccessRequest $accessRequest, $values)
     {
-        $expiry_time = null;
-        if (isset($input['expiry_date']) && isset($input['expiry_time'])) {
-            $expiry_time = Carbon::parse($input['expiry_date'])
-                                ->setTimeFromTimeString($input['expiry_time'])
+        $expiry_date = $values['expiry_date'] ?? Carbon::parse($accessRequest->expiry_time)->format('Y-m-d');
+        $expiry_time = $values['expiry_time'] ?? Carbon::parse($accessRequest->expiry_time)->format('H:i');
+
+        $expires_at = null;
+        if ($expiry_date && $expiry_time) {
+            $expires_at = Carbon::parse($expiry_date)
+                                ->setTimeFromTimeString($expiry_time)
                                 ->toDateTimeString();
         }
 
         $accessRequest->update([
             'description' => isset($values['description']) ? $values['description'] : $accessRequest->description,
-            'expiry_time' => isset($expiry_time) ? $expiry_time : $accessRequest->expiry_time,
+            'expiry_time' => isset($expires_at) ? $expires_at : $accessRequest->expiry_time,
         ]);
 
         return $accessRequest;
