@@ -33,7 +33,7 @@ class AccessRequestRequest extends FormRequest
                 Rule::exists('documents', 'id')->withoutTrashed(),
             ],
             'description' => '',
-            'expiry_date' => 'date|after:today',
+            'expiry_date' => 'date|after:yesterday',
             'expiry_time' => 'date_format:H:i|required_with:expiry_date',
 //            'type_id' => ''
         ];
