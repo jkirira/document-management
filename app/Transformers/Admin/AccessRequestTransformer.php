@@ -23,6 +23,7 @@ class AccessRequestTransformer
             'rejected' => (bool)$accessRequest->rejected,
             'rejected_by' => $accessRequest->rejectedBy,
             'rejected_reason' => $accessRequest->rejected_reason,
+            'expiry_time' => $accessRequest->expiry_time,
         ];
 
     }
