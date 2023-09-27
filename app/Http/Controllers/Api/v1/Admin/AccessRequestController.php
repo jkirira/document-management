@@ -95,7 +95,9 @@ class AccessRequestController extends Controller
             ];
 
             $access = (new DocumentAccessService())->grantAccess($document, $access_values);
+
             $access->accessRequest()->associate($accessRequest);
+            $access->save();
 
             $accessRequest->update([
                 'granted' => true,
