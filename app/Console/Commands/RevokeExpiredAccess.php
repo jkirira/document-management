@@ -48,7 +48,6 @@ class RevokeExpiredAccess extends Command
 
         $expiredAccesses = DocumentAccess::with(['user', 'document'])
                                         ->active()
-                                        ->notExpired()
                                         ->where('expires_at', '<=', $after)
                                         ->get();
 

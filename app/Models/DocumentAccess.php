@@ -98,7 +98,12 @@ class DocumentAccess extends Model
     public function scopeNotExpired($query)
     {
         return $query->where(function ($query) {
-            $query->whereNull('expired')->orWhere('expired', 0);
+                    $query->where(function ($query) {
+                            $query->whereNull('expired')->orWhere('expired', 0);
+                        })
+                        ->where(function ($query) {
+                            $query->whereNull('expires_at')->orWhere('expires_at', '>=', now());
+                        });
         });
     }
 
