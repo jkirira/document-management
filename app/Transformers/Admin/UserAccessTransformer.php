@@ -13,7 +13,7 @@ class UserAccessTransformer
                 'id' => $documentAccess->document_id,
                 'name' => $documentAccess->document->name,
             ],
-            'user' => $documentAccess->user
+            'user' => isset($documentAccess->user)
                                 ? (new UserTransformer())->transform($documentAccess->user)
                                 : null,
             'update' => (bool)$documentAccess->update,
@@ -21,8 +21,18 @@ class UserAccessTransformer
             'delete' => (bool)$documentAccess->delete,
             'download' => (bool)$documentAccess->download,
             'revoked' => (bool)$documentAccess->revoked,
-            'granted_by' => $documentAccess->granted_by,
-            'revoked_by' => $documentAccess->revoked_by,
+            'granted_by' => isset($documentAccess->grantedBy)
+                                ?   [
+                                    'id' => $documentAccess->grantedBy->id,
+                                    'name' => $documentAccess->grantedBy->name,
+                                ]
+                                : null,
+            'revoked_by' => isset($documentAccess->revokedBy)
+                                ?   [
+                                    'id' => $documentAccess->revokedBy->id,
+                                    'name' => $documentAccess->revokedBy->name,
+                                ]
+                                : null,
             'upload_proof' => $documentAccess->upload_proof,
             'access_request_id' => $documentAccess->access_request_id,
         ];
