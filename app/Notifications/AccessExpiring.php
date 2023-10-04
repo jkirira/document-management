@@ -15,8 +15,6 @@ class AccessExpiring extends Notification
 
     public $documentAccess;
 
-    public $sendingTo = 'user';
-
     /**
      * Create a new notification instance.
      *
@@ -51,14 +49,10 @@ class AccessExpiring extends Notification
         return (new MailMessage)
                     ->subject('Document Access Expiring')
                     ->greeting('Hello!')
-                    ->when($this->sendingTo == 'user', function ($mailMessage) use ($document) {
-                        return $mailMessage->line('Your access to ' . ($document ? $document->name : '') . ' is almost expiring.');
-                    })
-                    ->when($this->sendingTo == 'granter', function ($mailMessage) use ($document) {
-                        return $mailMessage->line('Access to ' . ($document ? $document->name : '') . ' is almost expiring.');
-                    })
-                    ->line('Expires at: ' . Carbon::parse($this->documentAccess->expiry_access)->toDayDateTimeString())
-                    ->line('Time Remaining: ' . Carbon::parse($this->documentAccess->expiry_access)->diffForHumans())
+                    ->line('Access to ' . ($document ? $document->name : '') . ' is almost expiring.')
+                    ->line('Expiry time: ' . Carbon::parse($this->documentAccess->expires_at)->toDayDateTimeString())
+                    ->line('Time Remaining: ' . Carbon::parse($this->documentAccess->expires_at)->diffForHumans())
+                    ->line('')
                     ->line('Thank you for using our application!');
 
     }
@@ -74,18 +68,6 @@ class AccessExpiring extends Notification
         return [
             //
         ];
-    }
-
-    public function userNotification()
-    {
-        $this->sendingTo = 'user';
-        return $this;
-    }
-
-    public function granterNotification()
-    {
-        $this->sendingTo = 'granter';
-        return $this;
     }
 
 }

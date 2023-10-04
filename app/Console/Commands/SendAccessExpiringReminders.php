@@ -42,16 +42,16 @@ class SendAccessExpiringReminders extends Command
     {
         $this->info('Starting command SendAccessExpiringReminders');
 
-        if (!$this->option('six-hour-reminders') && !$this->option('twelve-hour-reminders')) {
-            $this->sendReminders();
-        }
-
         if ($this->option('six-hour-reminders')) {
             $this->sendSixHourReminders();
         }
 
         if ($this->option('twelve-hour-reminders')) {
             $this->sendTwelveHourReminders();
+        }
+
+        if (!$this->option('six-hour-reminders') && !$this->option('twelve-hour-reminders')) {
+            $this->sendReminders();
         }
 
         $this->info('Stopped command SendAccessExpiringReminders');
@@ -74,12 +74,12 @@ class SendAccessExpiringReminders extends Command
             try {
                 $user = $access->user;
                 if (isset($user)) {
-                    $user->notify((new AccessExpiring($access))->userNotification());
+                    $user->notify(new AccessExpiring($access));
                 }
 
                 $granter = $access->grantedBy;
                 if (isset($granter)) {
-                    $granter->notify((new AccessExpiring($access))->granterNotification());
+                    $granter->notify(new AccessExpiring($access));
                 }
 
                 $notified = true;
@@ -102,10 +102,10 @@ class SendAccessExpiringReminders extends Command
         $accessesWith6HoursLeft = DocumentAccess::with(['user', 'document', 'grantedBy'])
                                                 ->active()
                                                 ->notExpired()
-                                                ->where('expires_at', '>=', Carbon::now()->subHours(6))
+                                                ->where('expires_at', '<=', Carbon::now()->addHours(6))
                                                 ->where(function($query) {
                                                     /*
-                                                    *   notify if hasn't been notified yet
+                                                    *   only notify if hasn't been notified yet
                                                     *   or
                                                     *   if last notified more than 6 hours ago
                                                     */
@@ -121,12 +121,12 @@ class SendAccessExpiringReminders extends Command
             try {
                 $user = $access->user;
                 if (isset($user)) {
-                    $user->notify((new AccessExpiring($access))->userNotification());
+                    $user->notify(new AccessExpiring($access));
                 }
 
                 $granter = $access->grantedBy;
                 if (isset($granter)) {
-                    $granter->notify((new AccessExpiring($access))->granterNotification());
+                    $granter->notify(new AccessExpiring($access));
                 }
 
                 $notified = true;
@@ -149,10 +149,10 @@ class SendAccessExpiringReminders extends Command
         $accessesWith12HoursLeft = DocumentAccess::with(['user', 'document', 'grantedBy'])
                                                 ->active()
                                                 ->notExpired()
-                                                ->where('expires_at', '>=', Carbon::now()->subHours(12))
+                                                ->where('expires_at', '<=', Carbon::now()->addHours(12))
                                                 ->where(function($query) {
                                                     /*
-                                                    *   notify if hasn't been notified yet
+                                                    *   only notify if hasn't been notified yet
                                                     *   or
                                                     *   if last notified more than 12 hours ago
                                                     */
@@ -168,12 +168,12 @@ class SendAccessExpiringReminders extends Command
             try {
                 $user = $access->user;
                 if (isset($user)) {
-                    $user->notify((new AccessExpiring($access))->userNotification());
+                    $user->notify(new AccessExpiring($access));
                 }
 
                 $granter = $access->grantedBy;
                 if (isset($granter)) {
-                    $granter->notify((new AccessExpiring($access))->granterNotification());
+                    $granter->notify(new AccessExpiring($access));
                 }
 
                 $notified = true;
