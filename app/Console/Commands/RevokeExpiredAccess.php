@@ -16,7 +16,8 @@ class RevokeExpiredAccess extends Command
      *
      * @var string
      */
-    protected $signature = 'access:revoke-expired {--after=}';
+    protected $signature = 'access:revoke-expired
+                            {--after= : Optional expiry date formatted as Y-m-d}';
 
     /**
      * The console command description.
@@ -44,12 +45,14 @@ class RevokeExpiredAccess extends Command
     {
         $this->info('Starting command RevokeExpiredAccess');
 
-        $after = $this->option('after') ?? Carbon::now();
+        $after = $this->option('after') ? Carbon::parse($this->option('after')) : Carbon::now();
 
         $expiredAccesses = DocumentAccess::with(['user', 'document'])
                                         ->active()
                                         ->where('expires_at', '<=', $after)
                                         ->get();
+
+//        dd($expiredAccesses);
 
         $documentAccessService = new DocumentAccessService();
 

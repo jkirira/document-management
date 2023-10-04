@@ -47,13 +47,11 @@ class DocumentAccessExpired extends Notification
         $document = $this->documentAccess->document;
 
         return (new MailMessage)
-                            ->subject('Document Access Request Expired')
+                            ->subject('Document Access Expired')
                             ->greeting('Hello!')
-                            ->line('Your access to ' .
-                                        ($document ? $document->name : '') .
-                                        ' expired at ' .
-                                        Carbon::parse($this->documentAccess->expires_at)->toDayDateTimeString()
-                            )
+                            ->line('Access to the following document has expired')
+                            ->line('Document: ' . ($document ? $document->name : ''))
+                            ->line('Expired at: ' . Carbon::parse($this->documentAccess->expires_at)->toDayDateTimeString())
                             ->line('Thank you for using our application!');
     }
 
