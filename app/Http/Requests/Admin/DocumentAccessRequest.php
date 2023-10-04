@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -45,6 +46,10 @@ class DocumentAccessRequest extends FormRequest
             'delete' => 'required|boolean',
             'download' => 'required|boolean',
         ];
+
+        if($this->id) {
+            $rules = Arr::except($rules, ['department_id', 'all_departments', 'all_roles', 'role_id', 'user_id']);
+        }
 
         return $rules;
 
