@@ -47,6 +47,8 @@ Route::namespace('Api/v1/Admin')->group(function() {
         Route::post('/documents/{id}', [DocumentsController::class, 'update']);
         Route::delete('/documents/{id}', [DocumentsController::class, 'destroy']);
 
+        Route::get('/documents/{id}/history', [DocumentHistoryController::class, 'show']);
+
         Route::get('/documents/{document}/access-managers', [DocumentAccessManagersController::class, 'index']);
         Route::post('/documents/{document}/access-managers', [DocumentAccessManagersController::class, 'store']);
         Route::get('/documents/{document}/access-managers/{id}', [DocumentAccessManagersController::class, 'show']);
@@ -81,8 +83,7 @@ Route::namespace('Api/v1/Admin')->group(function() {
         Route::post('/access-requests/{accessRequest}/approve', [AccessRequestController::class, 'approve']);
         Route::post('/access-requests/{accessRequest}/reject', [AccessRequestController::class, 'reject']);
 
-        Route::get('/documents/history', [DocumentHistoryController::class, 'index']);
-        Route::get('/documents/{id}/history', [DocumentHistoryController::class, 'show']);
+//        Route::get('/documents/history', [DocumentHistoryController::class, 'index']);
 
     });
 
