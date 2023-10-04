@@ -14,7 +14,9 @@ class SendAccessExpiringReminders extends Command
      *
      * @var string
      */
-    protected $signature = 'access:send-access-expiring-reminders {--six-hour-reminders} {--twelve-hour-reminders}';
+    protected $signature = 'access:send-access-expiring-reminders
+                            {--six-hour-reminders : Send reminders for access with less than six hours left}
+                            {--twelve-hour-reminders : Send reminders for access with less than twelve hours left}';
 
     /**
      * The console command description.
