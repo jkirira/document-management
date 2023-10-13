@@ -26,6 +26,10 @@ class DocumentAccessRequest extends FormRequest
     public function rules()
     {
         $rules = [
+            'document_id' => [
+                'required',
+                Rule::exists('documents', 'id')->withoutTrashed(),
+            ],
             'all_departments' => 'boolean',
             'all_roles' => 'boolean',
             'department_id' => [

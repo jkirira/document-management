@@ -9,16 +9,17 @@ use App\Models\Document;
 use App\Models\DocumentAccess;
 use App\Services\DocumentAccessService;
 use App\Transformers\Admin\DocumentAccessTransformer;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class DocumentAccessController extends Controller
 {
-    public function index(Document $document)
+    public function index()
     {
         // add maybe only admin authorization
-        $documentAccess = $document->access()
+        $documentAccess = DocumentAccess::query()
                                     ->normalAccess()
                                     ->get()
                                     ->map(function($access) {
@@ -28,8 +29,10 @@ class DocumentAccessController extends Controller
         return response()->json($documentAccess, Response::HTTP_OK);
     }
 
-    public function store(DocumentAccessRequest $request, Document $document)
+    public function store(DocumentAccessRequest $request)
     {
+        $document = Document::findOrFail($request->document_id);
+
         Gate::authorize('grant-document-access', $document);
 
         $input = $request->all();
@@ -38,15 +41,17 @@ class DocumentAccessController extends Controller
         return response()->json([], Response::HTTP_CREATED);
     }
 
-    public function show(Document $document, $id)
+    public function show(Request $request, $id)
     {
         // add maybe only admin authorization
-        $access = $document->access()->normalAccess()->findOrFail($id);
+        $access = DocumentAccess::normalAccess()->findOrFail($id);
         return response()->json((new DocumentAccessTransformer())->transform($access), Response::HTTP_OK);
     }
 
-    public function update(DocumentAccessRequest $request, Document $document, $id)
+    public function update(DocumentAccessRequest $request, $id)
     {
+        $document = Document::findOrFail($request->document_id);
+
         Gate::authorize('grant-document-access', $document);
 
         $input = $request->all();
@@ -58,15 +63,39 @@ class DocumentAccessController extends Controller
         return response()->json([], Response::HTTP_CREATED);
     }
 
-    public function destroy(Document $document, $id)
+    public function destroy(Request $request, $id)
     {
-        Gate::authorize('grant-document-access', $document);
+        $access = DocumentAccess::normalAccess()->findOrFail($id);
 
-        $access = $document->access()->normalAccess()->findOrFail($id);
+        Gate::authorize('grant-document-access', $access->document);
 
         $access->delete();
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function revoke(Request $request, $id)
+    {
+        $access = DocumentAccess::normalAccess()->findOrFail($id);
+
+        Gate::authorize('grant-document-access', $access->document);
+
+        (new DocumentAccessService())->revokeAccess($access);
+
+        return response()->json(null, Response::HTTP_OK);
+    }
+
+    public function documentAccess(Document $document)
+    {
+        // add maybe only admin authorization
+        $documentAccess = $document->access()
+                                    ->normalAccess()
+                                    ->get()
+                                    ->map(function($access) {
+                                        return (new DocumentAccessTransformer())->transform($access);
+                                    });
+
+        return response()->json($documentAccess, Response::HTTP_OK);
     }
 
     public function updateDocumentAccess(UpdateDocumentAccessRequest $request, Document $document)
@@ -87,17 +116,6 @@ class DocumentAccessController extends Controller
         });
 
         return response()->json([], Response::HTTP_CREATED);
-    }
-
-    public function revoke(Document $document, $id)
-    {
-        Gate::authorize('grant-document-access', $document);
-
-        $access = $document->access()->normalAccess()->findOrFail($id);
-
-        (new DocumentAccessService())->revokeAccess($access);
-
-        return response()->json(null, Response::HTTP_OK);
     }
 
 }
