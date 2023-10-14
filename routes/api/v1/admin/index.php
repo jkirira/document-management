@@ -70,12 +70,14 @@ Route::namespace('Api/v1/Admin')->group(function() {
         Route::post('/folders/{folder}', [FoldersController::class, 'update']);
         Route::delete('/folders/{folder}', [FoldersController::class, 'destroy']);
 
-        Route::get('/documents/{document}/user-access', [UserAccessController::class, 'index']);
-        Route::post('/documents/{document}/user-access', [UserAccessController::class, 'store']);
-        Route::get('/documents/{document}/user-access/{id}', [UserAccessController::class, 'show']);
-        Route::post('/documents/{document}/user-access/{id}/revoke', [UserAccessController::class, 'revoke']);
-        Route::post('/documents/{document}/user-access/update', [UserAccessController::class, 'update']);
-        Route::delete('/documents/{document}/user-access/{id}', [UserAccessController::class, 'destroy']);
+        Route::get('/document-user-access', [UserAccessController::class, 'index']);
+        Route::post('/document-user-access', [UserAccessController::class, 'store']);
+        Route::get('/document-user-access/{id}', [UserAccessController::class, 'show']);
+        Route::post('/document-user-access/{id}', [UserAccessController::class, 'update']);
+        Route::post('/document-user-access/{id}/revoke', [UserAccessController::class, 'revoke']);
+        Route::delete('/document-user-access/{id}', [UserAccessController::class, 'destroy']);
+
+        Route::get('/documents/{document}/user-access', [DocumentAccessController::class, 'userAccess']);
 
         Route::get('/access-requests', [AccessRequestController::class, 'index']);
         Route::post('/access-requests', [AccessRequestController::class, 'store']);
