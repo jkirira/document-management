@@ -17,7 +17,7 @@ class DocumentAccessManagersController extends Controller
 
     public function store(DocumentAccessManagerRequest $request, Document $document)
     {
-        Gate::authorize('update-access-managers', $document);
+        Gate::authorize('manage-access-managers', $document);
 
         $document->accessManagers()->sync($request['access_managers']);
 
@@ -32,7 +32,7 @@ class DocumentAccessManagersController extends Controller
 
     public function update(DocumentAccessManagerRequest $request, Document $document)
     {
-        Gate::authorize('update-access-managers', $document);
+        Gate::authorize('manage-access-managers', $document);
 
         $document->accessManagers()->sync($request['access_managers']);
 
@@ -41,7 +41,7 @@ class DocumentAccessManagersController extends Controller
 
     public function destroy(Document $document, $id)
     {
-        Gate::authorize('update-access-managers', $document);
+        Gate::authorize('manage-access-managers', $document);
 
         $document->accessManagers()->detach($id);
 
