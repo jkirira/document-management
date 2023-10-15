@@ -50,15 +50,13 @@ class DocumentAccessController extends Controller
 
     public function update(DocumentAccessRequest $request, $id)
     {
-        $document = Document::findOrFail($request->document_id);
+        $access = DocumentAccess::normalAccess()->findOrFail($id);
 
-        Gate::authorize('manage-document-access', $document);
+        Gate::authorize('manage-document-access', $access->document);
 
         $input = $request->all();
 
-        $documentAccess = $document->access()->normalAccess()->findOrFail($id);
-
-        (new DocumentAccessService())->updateAccess($documentAccess, $input);
+        (new DocumentAccessService())->updateAccess($access, $input);
 
         return response()->json([], Response::HTTP_CREATED);
     }
