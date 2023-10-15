@@ -47,7 +47,7 @@ class AuthServiceProvider extends ServiceProvider
             return $user->isAdmin() || $user->canManageDocumentAccess($document);
         });
 
-        Gate::define('grant-document-access', function (User $user, Document $document) {
+        Gate::define('manage-document-access', function (User $user, Document $document) {
             return  $user->isAdmin() ||
                     $user->isDocumentOwner($document) ||
                     $user->canManageDocumentAccess($document);

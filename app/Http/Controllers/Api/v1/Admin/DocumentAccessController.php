@@ -33,7 +33,7 @@ class DocumentAccessController extends Controller
     {
         $document = Document::findOrFail($request->document_id);
 
-        Gate::authorize('grant-document-access', $document);
+        Gate::authorize('manage-document-access', $document);
 
         $input = $request->all();
         (new DocumentAccessService())->grantAccess($document, $input);
@@ -52,7 +52,7 @@ class DocumentAccessController extends Controller
     {
         $document = Document::findOrFail($request->document_id);
 
-        Gate::authorize('grant-document-access', $document);
+        Gate::authorize('manage-document-access', $document);
 
         $input = $request->all();
 
@@ -67,7 +67,7 @@ class DocumentAccessController extends Controller
     {
         $access = DocumentAccess::normalAccess()->findOrFail($id);
 
-        Gate::authorize('grant-document-access', $access->document);
+        Gate::authorize('manage-document-access', $access->document);
 
         $access->delete();
 
@@ -78,7 +78,7 @@ class DocumentAccessController extends Controller
     {
         $access = DocumentAccess::normalAccess()->findOrFail($id);
 
-        Gate::authorize('grant-document-access', $access->document);
+        Gate::authorize('manage-document-access', $access->document);
 
         (new DocumentAccessService())->revokeAccess($access);
 
@@ -100,7 +100,7 @@ class DocumentAccessController extends Controller
 
     public function updateDocumentAccess(UpdateDocumentAccessRequest $request, Document $document)
     {
-        Gate::authorize('grant-document-access', $document);
+        Gate::authorize('manage-document-access', $document);
 
         $accessService = new DocumentAccessService();
 
