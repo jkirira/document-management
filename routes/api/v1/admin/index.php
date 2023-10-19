@@ -7,7 +7,6 @@ use App\Http\Controllers\Api\v1\Admin\DocumentAccessManagersController;
 use App\Http\Controllers\Api\v1\Admin\DocumentHistoryController;
 use App\Http\Controllers\Api\v1\Admin\DocumentsController;
 use App\Http\Controllers\Api\v1\Admin\FoldersController;
-use App\Http\Controllers\Api\v1\Admin\LoginController;
 use App\Http\Controllers\Api\v1\Admin\RolesController;
 use App\Http\Controllers\Api\v1\Admin\UserAccessController;
 use App\Http\Controllers\Api\v1\Admin\UsersController;
@@ -15,11 +14,6 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::namespace('Api/v1/Admin')->group(function() {
-
-    Route::post('/login', [LoginController::class, 'login'])->middleware('guest:sanctum');
-
-    Route::get('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
-
 
     Route::middleware('auth:sanctum')->group(function () {
 
