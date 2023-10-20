@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\LoginRequest;
+use App\Transformers\Admin\UserTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +19,7 @@ class AuthController extends Controller
             return response()->json([
                 'success' => true,
                 'token' => $token->plainTextToken,
+                'user' => (new UserTransformer())->transform(Auth::user()),
             ], Response::HTTP_OK);
         }
 
