@@ -41,4 +41,15 @@ class AuthController extends Controller
 
     }
 
+    public function user (Request $request) {
+        $user_id = $request->user_id;
+
+        if ($request->user()->id !== $user_id) {
+            return response()->json(['error_message' => 'Invalid Request'], 500);
+        }
+
+        return (new UserTransformer())->transform($request->user());
+
+    }
+
 }
