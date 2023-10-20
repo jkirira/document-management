@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function (){
 
     Route::post('/login', [AuthController::class, 'login'])->middleware('guest:sanctum');
-    Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
     Route::post('/user', [AuthController::class, 'user'])->middleware('auth:sanctum');
 
     // admin routes
