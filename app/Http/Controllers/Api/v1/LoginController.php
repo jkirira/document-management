@@ -22,7 +22,7 @@ class LoginController extends Controller
         }
 
         return response()->json([
-            'email' => 'The provided credentials do not match our records.',
+            'error_message' => 'The provided credentials do not match our records.',
         ], Response::HTTP_UNAUTHORIZED);
 
     }
@@ -34,7 +34,7 @@ class LoginController extends Controller
             return response()->json([], Response::HTTP_NO_CONTENT);
 
         } else {
-            return response()->json(['error' => 'Logout Error'], Response::HTTP_BAD_REQUEST);
+            return response()->json(['error_message' => 'Logout Error'], Response::HTTP_BAD_REQUEST);
         }
 
     }
