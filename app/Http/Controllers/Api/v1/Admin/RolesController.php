@@ -11,10 +11,21 @@ use Illuminate\Support\Str;
 
 class RolesController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('viewAny', Role::class);
-        return response()->json(Role::all(), Response::HTTP_OK);
+
+        $rolesQuery = Role::query()
+                        ->when(isset($request->search), function($query) use ($request) {
+                            return $query->search($request->search);
+                        });
+
+        if (isset($request->page) && isset($request->perPage)) {
+            return response()->json($rolesQuery->orderBy('id', 'desc')->paginate($request->perPage), Response::HTTP_OK);
+        }
+
+        return response()->json($rolesQuery->get(), Response::HTTP_OK);
+
     }
 
     public function store(RoleRequest $request)

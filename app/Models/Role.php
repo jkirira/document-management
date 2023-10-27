@@ -16,6 +16,9 @@ class Role extends Model
         'id',
     ];
 
+    protected $searchColumns = [
+        'name',
+    ];
 
     const ADMIN_ROLE_SLUG = 'admin';
 
@@ -25,4 +28,19 @@ class Role extends Model
         return $this->belongsToMany(User::class, 'role_users', 'role_id', 'user_id');
     }
 
+    public function scopeSearch($query, string $terms = null)
+    {
+        $columns = array_filter($this->searchColumns);
+        $terms = array_filter(explode(' ', $terms));
+
+        $query->where(function ($query) use ($terms, $columns) {
+            foreach ($columns as $column) {
+                $query->orWhere(function ($query) use ($terms, $column) {
+                    foreach ($terms as $term) {
+                        $query->orWhere($column, 'like', '%'.$term.'%');
+                    };
+                });
+            };
+        });
+    }
 }
