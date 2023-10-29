@@ -18,10 +18,11 @@ class RolesController extends Controller
         $rolesQuery = Role::query()
                         ->when(isset($request->search), function($query) use ($request) {
                             return $query->search($request->search);
-                        });
+                        })
+                        ->orderBy('id', 'desc');
 
         if (isset($request->page) && isset($request->perPage)) {
-            return response()->json($rolesQuery->orderBy('id', 'desc')->paginate($request->perPage), Response::HTTP_OK);
+            return response()->json($rolesQuery->paginate($request->perPage), Response::HTTP_OK);
         }
 
         return response()->json($rolesQuery->get(), Response::HTTP_OK);
