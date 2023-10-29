@@ -10,6 +10,7 @@ class UserTransformer
         return [
             'id' => $user->id,
             'name' => $user->name,
+            'email' => $user->email,
             'roles' => (bool)count($user->roles)
                         ? $user->roles->map(function($role) {
                                             return [

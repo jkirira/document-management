@@ -7,6 +7,8 @@ use App\Http\Requests\Admin\UserRequest;
 use App\Models\User;
 use App\Notifications\AccountCreated;
 use App\Services\UserService;
+use App\Transformers\Admin\UserTransformer;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -19,10 +21,31 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('viewAny', User::class);
-        return response()->json(User::with(['roles', 'department'])->get(), Response::HTTP_OK);
+
+        $usersQuery = User::query()
+                            ->with(['roles', 'department'])
+                            ->when(isset($request->search), function($query) use ($request) {
+                                return $query->search($request->search);
+                            })
+                            ->orderBy('id', 'desc');
+
+        if (isset($request->page) && isset($request->perPage)) {
+            $paginatedUsers = $usersQuery->paginate($request->perPage);
+            $paginatedUsers->getCollection()->transform(function ($value) {
+                return (new UserTransformer())->transform($value);
+            });
+            return response()->json($paginatedUsers, Response::HTTP_OK);
+        }
+
+        $users = $usersQuery->get()->map(function ($value) {
+            return (new UserTransformer())->transform($value); 
+        });
+
+        return response()->json($users, Response::HTTP_OK);
+
     }
 
     /**
