@@ -30,6 +30,13 @@ class UsersController extends Controller
                             ->when(isset($request->search), function($query) use ($request) {
                                 return $query->search($request->search);
                             })
+                            ->when((isset($request->filter) && isset($request->filterBy)), function($query) use ($request) {
+                                if ($request->filterBy == 'department') {
+                                    return $query->whereHas('department', function($department) use ($request) {
+                                                $department->where('slug', $request->filter);
+                                            });
+                                }
+                            })
                             ->orderBy('id', 'desc');
 
         if (isset($request->page) && isset($request->perPage)) {
