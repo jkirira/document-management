@@ -16,10 +16,21 @@ class DepartmentsController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('viewAny', Department::class);
-        return response()->json(Department::all(), Response::HTTP_OK);
+
+        $departmentsQuery = Department::query()
+                            ->when(isset($request->search), function($query) use ($request) {
+                                return $query->search($request->search);
+                            })
+                            ->orderBy('id', 'desc');
+
+        if (isset($request->page) && isset($request->perPage)) {
+            return response()->json($departmentsQuery->paginate($request->perPage), Response::HTTP_OK);
+        }
+
+        return response()->json($departmentsQuery->get(), Response::HTTP_OK);
     }
 
     /**
