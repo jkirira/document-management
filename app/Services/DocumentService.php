@@ -68,7 +68,7 @@ class DocumentService
         return $document;
     }
 
-    public function generateStorageLocation($folder) {
+    public function generateStorageLocation(Folder $folder) {
         $storage_location = null;
 
         $folder_path_string = Str::slug($folder->name);
