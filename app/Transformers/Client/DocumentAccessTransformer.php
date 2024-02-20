@@ -13,12 +13,14 @@ class DocumentAccessTransformer
                 'id' => $documentAccess->document_id,
                 'name' => $documentAccess->document->name,
             ],
+            'all_departments' => (bool)$documentAccess->all_departments,
             'department' => isset($documentAccess->department)
                                 ?   [
                                         'id' => $documentAccess->department_id,
                                         'name' => $documentAccess->department->name,
                                     ]
                                 : null,
+            'all_roles' => (bool)$documentAccess->all_roles,
             'role' => isset($documentAccess->role)
                         ?   [
                                 'id' => $documentAccess->role_id,
@@ -31,8 +33,6 @@ class DocumentAccessTransformer
                                 'name' => $documentAccess->user->name,
                             ]
                         : null,
-            'all_departments' => (bool)$documentAccess->all_departments,
-            'all_roles' => (bool)$documentAccess->all_roles,
             'update' => (bool)$documentAccess->update,
             'view' => (bool)$documentAccess->view,
             'delete' => (bool)$documentAccess->delete,

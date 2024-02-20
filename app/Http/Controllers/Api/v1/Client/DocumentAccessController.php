@@ -20,7 +20,7 @@ class DocumentAccessController extends Controller
     {
         // add maybe only admin authorization
         $documentAccess = DocumentAccess::query()
-                                    ->normalAccess()
+//                                    ->normalAccess()
                                     ->get()
                                     ->map(function($access) {
                                         return (new DocumentAccessTransformer())->transform($access);
@@ -44,13 +44,15 @@ class DocumentAccessController extends Controller
     public function show(Request $request, $id)
     {
         // add maybe only admin authorization
-        $access = DocumentAccess::normalAccess()->findOrFail($id);
+//        $access = DocumentAccess::normalAccess()->findOrFail($id);
+        $access = DocumentAccess::findOrFail($id);
         return response()->json((new DocumentAccessTransformer())->transform($access), Response::HTTP_OK);
     }
 
     public function update(DocumentAccessRequest $request, $id)
     {
-        $access = DocumentAccess::normalAccess()->findOrFail($id);
+//        $access = DocumentAccess::normalAccess()->findOrFail($id);
+        $access = DocumentAccess::findOrFail($id);
 
         Gate::authorize('manage-document-access', $access->document);
 
@@ -63,7 +65,8 @@ class DocumentAccessController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $access = DocumentAccess::normalAccess()->findOrFail($id);
+//        $access = DocumentAccess::normalAccess()->findOrFail($id);
+        $access = DocumentAccess::findOrFail($id);
 
         Gate::authorize('manage-document-access', $access->document);
 
@@ -74,7 +77,8 @@ class DocumentAccessController extends Controller
 
     public function revoke(Request $request, $id)
     {
-        $access = DocumentAccess::normalAccess()->findOrFail($id);
+//        $access = DocumentAccess::normalAccess()->findOrFail($id);
+        $access = DocumentAccess::findOrFail($id);
 
         Gate::authorize('manage-document-access', $access->document);
 
@@ -87,7 +91,7 @@ class DocumentAccessController extends Controller
     {
         // add maybe only admin authorization
         $documentAccess = $document->access()
-                                    ->normalAccess()
+//                                    ->normalAccess()
                                     ->get()
                                     ->map(function($access) {
                                         return (new DocumentAccessTransformer())->transform($access);
@@ -106,8 +110,8 @@ class DocumentAccessController extends Controller
             $accesses = $request->access;
 
             foreach ($accesses as $access_values) {
-//            $documentAccess = DocumentAccess::findOrFail($access_values['id']);
-                $documentAccess = $document->access()->normalAccess()->findOrFail($access_values['id']);
+//                $documentAccess = $document->access()->normalAccess()->findOrFail($access_values['id']);
+                $documentAccess = $document->access()->findOrFail($access_values['id']);
                 $accessService->updateAccess($documentAccess, $access_values);
             }
 
