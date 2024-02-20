@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests\Client;
 
 use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;

@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1\Admin;
+namespace App\Http\Controllers\Api\v1\Client;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\AccessRequestRequest;
+use App\Http\Requests\Client\AccessRequestRequest;
 use App\Models\AccessRequest;
 use App\Notifications\AccessRequestGranted;
 use App\Notifications\AccessRequestMade;
 use App\Notifications\AccessRequestRejected;
 use App\Services\AccessRequestService;
 use App\Services\DocumentAccessService;
-use App\Transformers\Admin\AccessRequestTransformer;
+use App\Transformers\Client\AccessRequestTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;

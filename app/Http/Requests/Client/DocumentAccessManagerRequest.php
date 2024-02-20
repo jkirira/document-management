@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests\Client;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class FolderRequest extends FormRequest
+class DocumentAccessManagerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,19 +24,9 @@ class FolderRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-            'name' => 'required',
-            'parent_id' => [
-                'nullable',
-                Rule::exists('folders', 'id')->withoutTrashed(),
-            ],
+        return [
+            'access_managers.*' => [Rule::exists('users', 'id')->whereNull('deleted_at')],
         ];
-
-        if (isset($this->folder)) {
-            array_push($rules['parent_id'], Rule::notIn([$this->folder->id]));
-        }
-
-        return $rules;
     }
 
 }

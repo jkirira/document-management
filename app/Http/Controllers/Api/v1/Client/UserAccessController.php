@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1\Admin;
+namespace App\Http\Controllers\Api\v1\Client;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\UserAccessRequest;
+use App\Http\Requests\Client\UserAccessRequest;
 use App\Models\Document;
 use App\Models\DocumentAccess;
 use App\Services\DocumentAccessService;

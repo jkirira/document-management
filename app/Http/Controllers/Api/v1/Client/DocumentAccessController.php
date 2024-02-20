@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1\Admin;
+namespace App\Http\Controllers\Api\v1\Client;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\DocumentAccessRequest;
-use App\Http\Requests\Admin\UpdateDocumentAccessRequest;
+use App\Http\Requests\Client\DocumentAccessRequest;
+use App\Http\Requests\Client\UpdateDocumentAccessRequest;
 use App\Models\Document;
 use App\Models\DocumentAccess;
 use App\Services\DocumentAccessService;
-use App\Transformers\Admin\DocumentAccessTransformer;
+use App\Transformers\Client\DocumentAccessTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;

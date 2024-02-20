@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1\Admin;
+namespace App\Http\Controllers\Api\v1\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\Document;
-use App\Transformers\Admin\DocumentTransformer;
+use App\Transformers\Client\DocumentTransformer;
 use Illuminate\Http\Response;
 
 class DocumentHistoryController extends Controller

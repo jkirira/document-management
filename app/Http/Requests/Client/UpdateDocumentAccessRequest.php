@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests\Client;
 
 use App\Rules\IsNormalAccess;
 use Illuminate\Validation\Rule;

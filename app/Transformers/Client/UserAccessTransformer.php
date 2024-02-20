@@ -1,7 +1,8 @@
 <?php
-namespace App\Transformers\Admin;
+namespace App\Transformers\Client;
 
 use App\Models\DocumentAccess;
+use App\Transformers\Admin\UserTransformer;
 
 class UserAccessTransformer
 {

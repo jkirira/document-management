@@ -1,5 +1,5 @@
 <?php
-namespace App\Transformers\Admin;
+namespace App\Transformers\Client;
 
 use App\Models\Document;
 
