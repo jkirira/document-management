@@ -11,11 +11,6 @@ class FolderPolicy
 {
     use HandlesAuthorization;
 
-    public function before(User $user, $ability)
-    {
-        return $user->isAdmin();
-    }
-
     /**
      * Determine whether the user can view any models.
      *
