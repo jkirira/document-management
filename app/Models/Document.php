@@ -60,52 +60,6 @@ class Document extends Model
                 });
     }
 
-    //    Documents::accessibleToDepartment()->get();
-    public function scopeAccessibleToDepartment($query, $department, $ability=null)
-    {
-        return $query->whereHas('access', function ($access) use ($department, $ability) {
-                        $access->active()
-                                ->notExpired()
-                                ->when($ability, function ($query, $ability) {
-                                    return $query->withAbilityTo($ability);
-                                })
-                                ->where(function ($query) use ($department) {
-                                    $query->where('all_departments', true)->orWhere('department_id', $department->id);
-                                });
-                });
-    }
-
-    //    Documents::accessibleToRole()->get();
-    public function scopeAccessibleToRole($query, $role, $ability=null)
-    {
-        return $query->whereHas('access', function ($access) use ($role, $ability) {
-                        $access->active()
-                                ->notExpired()
-                                ->when($ability, function ($query, $ability) {
-                                    return $query->withAbilityTo($ability);
-                                })
-                                ->where(function ($query) use ($role) {
-                                    $query->where('all_roles', true)->orWhere('role_id', $role->id);
-                                });
-                });
-    }
-
-    //    Documents::accessibleToRoles()->get();
-    public function scopeAccessibleToRoles($query, $roles, $ability=null)
-    {
-        $roleIds = collect($roles)->pluck('id');
-        return $query->whereHas('access', function ($access) use ($roleIds, $ability) {
-                        $access->active()
-                                ->notExpired()
-                                ->when($ability, function ($query, $ability) {
-                                    return $query->withAbilityTo($ability);
-                                })
-                                ->where(function ($query) use ($roleIds) {
-                                    $query->where('all_roles', true)->orWhereIn('role_id', $roleIds);
-                                });
-                });
-    }
-
     //    Documents::accessibleToUser()->get();
     public function scopeAccessibleToUser($query, $user, $ability=null)
     {
@@ -120,8 +74,8 @@ class Document extends Model
                                     return $query->withAbilityTo($ability);
                                 })
                                 ->where(function ($query) use ($department, $roleIds, $user) {
-                                    $query->where(function ($query) use ($department) {
-                                                $query->where('all_departments', true)->where('all_roles', true);
+                                    $query->where(function ($query) {
+                                                $query->accessibleToEveryone();
                                             })
                                             ->orWhere(function ($query) use ($department, $roleIds) {
                                                 $query->where('all_departments', true)->whereIn('role_id', $roleIds);

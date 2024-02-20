@@ -78,21 +78,6 @@ class DocumentAccessService
         return Document::accessibleToEveryone($ability)->where('id', $document->id)->exists();
     }
 
-    public function documentIsAccessibleByDepartment(Document $document, Department $department, $ability=null)
-    {
-        return Document::accessibleToDepartment($department, $ability)->where('id', $document->id)->exists();
-    }
-
-    public function documentIsAccessibleByRole(Document $document, Role $role, $ability=null)
-    {
-        return Document::accessibleToRole($role, $ability)->where('id', $document->id)->exists();
-    }
-
-    public function documentIsAccessibleByRoles(Document $document, Array $roles, $ability=null)
-    {
-        return Document::accessibleToRoles($roles, $ability)->where('id', $document->id)->exists();
-    }
-
     public function documentIsAccessibleByUser(Document $document, User $user, $ability=null)
     {
         return Document::accessibleToUser($user, $ability)->where('id', $document->id)->exists();

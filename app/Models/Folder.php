@@ -48,25 +48,4 @@ class Folder extends Model
                     });
     }
 
-    public function scopeAccessibleToDepartment($query, $department, $ability=null)
-    {
-        return $query->whereHas('documents', function ($documents) use ($department, $ability) {
-                        $documents->accessibleToDepartment($department, $ability);
-                    });
-    }
-
-    public function scopeAccessibleToRole($query, $role, $ability=null)
-    {
-        return $query->whereHas('documents', function ($documents) use ($role, $ability) {
-                        $documents->accessibleToRole($role, $ability);
-                    });
-    }
-
-    public function scopeAccessibleToRoles($query, $roles, $ability=null)
-    {
-        return $query->whereHas('documents', function ($documents) use ($roles, $ability) {
-                        $documents->accessibleToRoles($roles, $ability);
-                    });
-    }
-
 }
