@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1\Admin;
+namespace App\Http\Controllers\Api\v1\Client;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\DocumentAccessManagerRequest;
+use App\Http\Requests\Client\DocumentAccessManagerRequest;
 use App\Models\Document;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;

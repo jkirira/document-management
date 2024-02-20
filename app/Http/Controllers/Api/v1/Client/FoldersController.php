@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1\Admin;
+namespace App\Http\Controllers\Api\v1\Client;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\FolderRequest;
+use App\Http\Requests\Client\FolderRequest;
 use App\Models\Folder;
-use App\Transformers\Admin\FolderTransformer;
+use App\Transformers\Client\FolderTransformer;
 use Illuminate\Http\Response;
 
 class FoldersController extends Controller

@@ -8,12 +8,12 @@ use App\Models\Document;
 use App\Models\Folder;
 use App\Models\Role;
 use App\Models\User;
-use App\Policies\Admin\AccessRequestPolicy;
 use App\Policies\Admin\DepartmentPolicy;
-use App\Policies\Admin\DocumentPolicy;
-use App\Policies\Admin\FolderPolicy;
 use App\Policies\Admin\RolePolicy;
 use App\Policies\Admin\UserPolicy;
+use App\Policies\Client\AccessRequestPolicy;
+use App\Policies\Client\DocumentPolicy;
+use App\Policies\Client\FolderPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
