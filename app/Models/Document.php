@@ -18,7 +18,7 @@ class Document extends Model
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'category_documents');
+        return $this->belongsToMany(UserCategory::class, 'category_documents');
     }
 
     public function owner()

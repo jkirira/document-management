@@ -54,6 +54,11 @@ class User extends Authenticatable
         return $this->belongsTo(Department::class, 'department_id');
     }
 
+    public function categories()
+    {
+        return $this->hasMany(UserCategory::class, 'user_id');
+    }
+
     public function isAdmin()
     {
         $adminRole = Role::where('slug', Role::ADMIN_ROLE_SLUG)->first();
@@ -68,6 +73,11 @@ class User extends Authenticatable
     public function isFolderOwner(Folder $folder)
     {
         return $folder->added_by === $this->id;
+    }
+
+    public function isUserCategoryOwner(UserCategory $userCategory)
+    {
+        return $userCategory->user_id === $this->id;
     }
 
     public function hasRole(Role $role)

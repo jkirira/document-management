@@ -21,7 +21,7 @@ class UserCategory extends Model
         return $this->belongsToMany(Document::class, 'category_documents');
     }
 
-    public function scopeUser($query, User $user)
+    public function scopeForUser($query, User $user)
     {
         return $query->where('user_id', $user->id);
     }

@@ -8,8 +8,10 @@ use App\Models\Document;
 use App\Models\Folder;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserCategory;
 use App\Policies\DepartmentPolicy;
 use App\Policies\RolePolicy;
+use App\Policies\UserCategoryPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\AccessRequestPolicy;
 use App\Policies\DocumentPolicy;
@@ -32,6 +34,7 @@ class AuthServiceProvider extends ServiceProvider
          Document::class => DocumentPolicy::class,
          Folder::class => FolderPolicy::class,
          AccessRequest::class => AccessRequestPolicy::class,
+         UserCategory::class => UserCategoryPolicy::class,
     ];
 
     /**
