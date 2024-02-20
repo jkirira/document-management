@@ -65,9 +65,9 @@ class DocumentsController extends Controller
 
         $this->authorize('update', $document);
 
-        $document->update([
-            'name' => $request->name,
-        ]);
+        $input = $request->all();
+
+        $this->documentService->updateDocument($document, $input);
 
         return response()->json([], Response::HTTP_CREATED);
     }
