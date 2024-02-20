@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\v1\Client\AccessRequestController;
+use App\Http\Controllers\Api\v1\Client\CategoriesController;
 use App\Http\Controllers\Api\v1\Client\DocumentAccessController;
 use App\Http\Controllers\Api\v1\Client\DocumentAccessManagersController;
 use App\Http\Controllers\Api\v1\Client\DocumentHistoryController;
@@ -42,6 +43,12 @@ Route::namespace('Api/v1/Client')->group(function() {
         Route::get('/folders/{folder}', [FoldersController::class, 'show']);
         Route::post('/folders/{folder}', [FoldersController::class, 'update']);
         Route::delete('/folders/{folder}', [FoldersController::class, 'destroy']);
+
+        Route::get('/categories', [CategoriesController::class, 'index']);
+        Route::post('/categories', [CategoriesController::class, 'store']);
+        Route::get('/categories/{id}', [CategoriesController::class, 'show']);
+        Route::post('/categories/{id}', [CategoriesController::class, 'update']);
+        Route::delete('/categories/{id}', [CategoriesController::class, 'destroy']);
 
 //        Route::get('/document-user-access', [UserAccessController::class, 'index']);
 //        Route::post('/document-user-access', [UserAccessController::class, 'store']);
