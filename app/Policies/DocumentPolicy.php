@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Policies\Client;
+namespace App\Policies;
 
 use App\Models\Document;
 use App\Models\DocumentAccess;

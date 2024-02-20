@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Policies\Admin;
+namespace App\Policies;
 
+use App\Models\Folder;
 use App\Models\User;
+use App\Services\DocumentAccessService;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserPolicy
+class FolderPolicy
 {
     use HandlesAuthorization;
 
@@ -17,19 +19,19 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->isAdmin();
+        //
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Folder  $folder
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, User $model)
+    public function view(User $user, Folder $folder)
     {
-        return $user->isAdmin();
+        return (new DocumentAccessService())->folderIsAccessibleByUser($folder, $user);
     }
 
     /**
@@ -40,54 +42,55 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return $user->isAdmin();
+        return true;
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Folder  $folder
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, User $model)
+    public function update(User $user, Folder $folder)
     {
-        return $user->isAdmin();
+        return $user->isFolderOwner($folder);
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Folder  $folder
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, User $model)
+    public function delete(User $user, Folder $folder)
     {
-        return $user->isAdmin() && $user->id !== $model->id;
+        return $user->isFolderOwner($folder);
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Folder  $folder
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, User $model)
+    public function restore(User $user, Folder $folder)
     {
-        return $user->isAdmin() && $user->id !== $model->id;
+        return false;
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\User  $model
+     * @param  \App\Models\Folder  $folder
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, User $model)
+    public function forceDelete(User $user, Folder $folder)
     {
-        return $user->isAdmin() && $user->id !== $model->id;
+        return false;
     }
+
 }
