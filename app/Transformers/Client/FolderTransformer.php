@@ -5,32 +5,33 @@ use App\Models\Folder;
 
 class FolderTransformer
 {
-    public function transform(Folder $folder)
+    public function transform(Folder $folder, $withChildren=false, $withParent=false)
     {
-        $parentFolder = $folder->parentFolder;
-        $childFolders = $folder->childFolders;
-
-        return [
+        $transformed = [
             'id' => $folder->id,
             'name' => $folder->name,
-
-            'parent_folder' => isset($parentFolder)
-                            ? [
-                                'id' => $parentFolder->id,
-                                'name' => $parentFolder->name,
-                            ]
-                            : null,
-
-            'child_folders' => count($childFolders)
-                            ? $childFolders->map(function ($childFolder) {
-                                        return [
-                                            'id' => $childFolder->id,
-                                            'name' => $childFolder->name,
-                                        ];
-                                    })
-                            : [],
-            'hasParentFolder' => isset($parentFolder),
-            'hasChildFolders' => (bool)count($childFolders),
         ];
+
+        if($withChildren) {
+            $childFolders = $folder->childFolders;
+            $transformed['child_folders'] = $childFolders->map(function ($childFolder) {
+                                                return [
+                                                    'id' => $childFolder->id,
+                                                    'name' => $childFolder->name,
+                                                ];
+                                            });
+        }
+
+        if($withParent) {
+            $parentFolder = $folder->parentFolder;
+            $transformed['parent_folder'] = isset($parentFolder)
+                                                ? [
+                                                    'id' => $parentFolder->id,
+                                                    'name' => $parentFolder->name,
+                                                ]
+                                                : null;
+        }
+
+        return $transformed;
     }
 }
