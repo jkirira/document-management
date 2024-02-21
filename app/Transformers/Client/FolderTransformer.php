@@ -34,4 +34,16 @@ class FolderTransformer
 
         return $transformed;
     }
+
+    public function treeFromRoot(Folder $folder)
+    {
+        $childFolders = $folder->childFolders;
+
+        $transformed = $this->transform($folder);
+        $transformed['children'] = $childFolders->map(function ($childFolder) {
+                                        return $this->treeFromRoot($childFolder);
+                                    });
+        return $transformed;
+    }
+
 }
