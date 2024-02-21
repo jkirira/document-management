@@ -8,12 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
-class CategoriesController extends Controller
+class UserCategoriesController extends Controller
 {
     public function index(Request $request)
     {
-        $this->authorize('viewAny', UserCategory::class);
-
         $categoriesQuery = UserCategory::query()
                                 ->forUser($request->user())
                                 ->when(isset($request->search), function($query) use ($request) {
