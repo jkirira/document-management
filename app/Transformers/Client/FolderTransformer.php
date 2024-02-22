@@ -35,14 +35,20 @@ class FolderTransformer
         return $transformed;
     }
 
-    public function treeFromRoot(Folder $folder)
+    public function treeFromRoot(Folder $folder, $filterFunction=null)
     {
-        $childFolders = $folder->childFolders;
-
         $transformed = $this->transform($folder);
-        $transformed['children'] = $childFolders->map(function ($childFolder) {
-                                        return $this->treeFromRoot($childFolder);
-                                    });
+
+        $childFolders = $folder->childFolders;
+        if($filterFunction) {
+            $childFolders = $childFolders->filter($filterFunction);
+        }
+
+        $transformed['children'] = $childFolders->map(function ($childFolder) use ($filterFunction) {
+                                        return $this->treeFromRoot($childFolder, $filterFunction);
+                                    })
+                                    ->all();
+
         return $transformed;
     }
 
