@@ -63,6 +63,10 @@ class Document extends Model
     //    Documents::accessibleToUser()->get();
     public function scopeAccessibleToUser($query, $user, $ability=null)
     {
+        if ($user->isAdmin()) {
+            return $query;
+        }
+
         $department = $user->department;
         $roleIds = $user->roles->pluck('id');
 
@@ -75,7 +79,7 @@ class Document extends Model
                                 })
                                 ->where(function ($query) use ($department, $roleIds, $user) {
                                     $query->where(function ($query) {
-                                                $query->accessibleToEveryone();
+                                                $query->where('all_departments', true)->where('all_roles', true);
                                             })
                                             ->orWhere(function ($query) use ($department, $roleIds) {
                                                 $query->where('all_departments', true)->whereIn('role_id', $roleIds);
