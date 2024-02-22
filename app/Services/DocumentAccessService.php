@@ -91,30 +91,21 @@ class DocumentAccessService
 
     public function foldersAccessibleByUser(User $user)
     {
-        $folders = Folder::query()
-                        ->whereHas('documents', function ($documents) use ($user) {
-                            $documents->accessibleToUser($user, 'view');
+        $folders = Folder::where(function($query) use ($user) {
+                            $query->accessibleToUser($user, 'view');
                         })
                         ->get();
 
-        $parentFolders = $this->getParentFolders($folders, $folders->pluck('id')->all());
-        $folders = $folders->concat($parentFolders);
-
-        $checkForParentFolders = true;
-        while($checkForParentFolders) {
-            $newParentFolders = $this->getParentFolders($parentFolders, $folders->pluck('id')->all());
-
-            if(count($newParentFolders)) {
-                $folders = $folders->concat($newParentFolders);
-                $parentFolders = $newParentFolders;
-            } else {
-                $checkForParentFolders = false;
+        $parentFolders = [];
+        foreach($folders as $folder) {
+            $parent = $folder->parentFolder;
+            while(isset($parent)) {
+                $parentFolders[] = $parent;
+                $parent = $parent->parentFolder;
             }
-
         }
 
-        return $folders;
-
+        return collect($parentFolders)->merge($folders)->unique('id');
     }
 
     private function getParentFolders($childFolders, $folderIdsToIgnore = [])
