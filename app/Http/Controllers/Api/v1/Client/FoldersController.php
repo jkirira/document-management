@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\v1\Client;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\FolderRequest;
 use App\Models\Folder;
+use App\Services\DocumentAccessService;
 use App\Transformers\Client\FolderTransformer;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class FoldersController extends Controller
@@ -15,14 +17,14 @@ class FoldersController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $this->authorize('viewAny', Folder::class);
-        $folders = Folder::with(['parentFolder', 'childFolders'])
-                        ->get()
-                        ->map(function ($folder) {
-                            return (new FolderTransformer())->transform($folder);
-                        });
+//        $folders = Folder::with(['parentFolder', 'childFolders'])->get();
+        $folders = (new DocumentAccessService())->foldersAccessibleByUser($request->user());
+
+        $folders = $folders->map(function ($folder) {
+                        return (new FolderTransformer())->transform($folder);
+                    });
 
         return response()->json($folders, Response::HTTP_OK);
     }
