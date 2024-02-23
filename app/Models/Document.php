@@ -70,8 +70,7 @@ class Document extends Model
         $department = $user->department;
         $roleIds = $user->roles->pluck('id');
 
-        return $query->where('added_by', $user->id)
-                    ->orWhereHas('access', function ($access) use ($department, $roleIds, $user, $ability) {
+        return $query->whereHas('access', function ($access) use ($department, $roleIds, $user, $ability) {
                         $access->active()
                                 ->notExpired()
                                 ->when($ability, function ($query, $ability) {

@@ -87,8 +87,7 @@ class User extends Authenticatable
 
     public function canManageDocumentAccess(Document $document)
     {
-        return $this->isDocumentOwner($document->id)
-            || $document->accessManagers()->where('user_id', $this->id)->exists();
+        return $document->accessManagers()->where('user_id', $this->id)->exists();
     }
 
 }

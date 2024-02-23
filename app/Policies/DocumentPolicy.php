@@ -32,8 +32,7 @@ class DocumentPolicy
      */
     public function view(User $user, Document $document)
     {
-        return $user->isDocumentOwner($document) ||
-                (new DocumentAccessService())->documentIsAccessibleByUser($document, $user, DocumentAccess::ACCESS_ABILITIES['view']);
+        return (new DocumentAccessService())->documentIsAccessibleByUser($document, $user, DocumentAccess::ACCESS_ABILITIES['view']);
     }
 
     /**
@@ -56,8 +55,7 @@ class DocumentPolicy
      */
     public function update(User $user, Document $document)
     {
-        return $user->isDocumentOwner($document) ||
-                (new DocumentAccessService())->documentIsAccessibleByUser($document, $user, DocumentAccess::ACCESS_ABILITIES['update']);
+        return (new DocumentAccessService())->documentIsAccessibleByUser($document, $user, DocumentAccess::ACCESS_ABILITIES['update']);
     }
 
     /**
@@ -69,8 +67,7 @@ class DocumentPolicy
      */
     public function download(User $user, Document $document)
     {
-        return $user->isDocumentOwner($document) ||
-                (new DocumentAccessService())->documentIsAccessibleByUser($document, $user, DocumentAccess::ACCESS_ABILITIES['download']);
+        return (new DocumentAccessService())->documentIsAccessibleByUser($document, $user, DocumentAccess::ACCESS_ABILITIES['download']);
     }
 
     /**
@@ -82,8 +79,7 @@ class DocumentPolicy
      */
     public function delete(User $user, Document $document)
     {
-        return $user->isDocumentOwner($document) ||
-                (new DocumentAccessService())->documentIsAccessibleByUser($document, $user, DocumentAccess::ACCESS_ABILITIES['delete']);
+        return (new DocumentAccessService())->documentIsAccessibleByUser($document, $user, DocumentAccess::ACCESS_ABILITIES['delete']);
     }
 
     /**
