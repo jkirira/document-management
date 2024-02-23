@@ -47,17 +47,17 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('manage-access-managers', function (User $user, Document $document) {
-            return $user->isAdmin() || $user->canManageDocumentAccess($document);
+            return $user->isAdmin() || $user->isDocumentAccessManager($document);
         });
 
         Gate::define('manage-document-access', function (User $user, Document $document) {
-            return  $user->isAdmin() || $user->canManageDocumentAccess($document);
+            return  $user->isAdmin() || $user->isDocumentAccessManager($document);
         });
 
         Gate::define('approve-access-request', function (User $user, AccessRequest $accessRequest) {
             $document = $accessRequest->document;
             $userIsNotRequestingUser = $user->id !== $accessRequest->requested_by;
-            $userCanApproveRequest = ($user->isAdmin() || $user->canManageDocumentAccess($document));
+            $userCanApproveRequest = ($user->isAdmin() || $user->isDocumentAccessManager($document));
 
             return (bool)(
                 !$accessRequest->granted &&
@@ -70,7 +70,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('reject-access-request', function (User $user, AccessRequest $accessRequest) {
             $document = $accessRequest->document;
             $userIsNotRequestingUser = $user->id !== $accessRequest->requested_by;
-            $userCanApproveRequest = ($user->isAdmin() || $user->canManageDocumentAccess($document));
+            $userCanApproveRequest = ($user->isAdmin() || $user->isDocumentAccessManager($document));
 
             return (bool)(
                 !$accessRequest->granted &&

@@ -38,7 +38,7 @@ class AccessRequestPolicy
         $document = $accessRequest->document;
         return  ($accessRequest->requested_by === $user->id) ||
                 $user->isAdmin() ||
-                $user->canManageDocumentAccess($document);
+                $user->isDocumentAccessManager($document);
 
     }
 
@@ -65,7 +65,7 @@ class AccessRequestPolicy
         $document = $accessRequest->document;
         return  ($accessRequest->requested_by === $user->id) ||
             $user->isAdmin() ||
-            $user->canManageDocumentAccess($document);
+            $user->isDocumentAccessManager($document);
 
     }
 
@@ -81,7 +81,7 @@ class AccessRequestPolicy
         $document = $accessRequest->document;
         return  ($accessRequest->requested_by === $user->id) ||
             $user->isAdmin() ||
-            $user->canManageDocumentAccess($document);
+            $user->isDocumentAccessManager($document);
 
     }
 
