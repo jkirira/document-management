@@ -67,18 +67,5 @@ class AuthServiceProvider extends ServiceProvider
             );
         });
 
-        Gate::define('reject-access-request', function (User $user, AccessRequest $accessRequest) {
-            $document = $accessRequest->document;
-            $userIsNotRequestingUser = $user->id !== $accessRequest->requested_by;
-            $userCanApproveRequest = ($user->isAdmin() || $user->isDocumentAccessManager($document));
-
-            return (bool)(
-                !$accessRequest->granted &&
-                !$accessRequest->rejected &&
-                $userIsNotRequestingUser &&
-                $userCanApproveRequest
-            );
-        });
-
     }
 }

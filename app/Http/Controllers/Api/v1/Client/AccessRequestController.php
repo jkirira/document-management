@@ -117,7 +117,7 @@ class AccessRequestController extends Controller
 
     public function reject(Request $request, AccessRequest $accessRequest)
     {
-        Gate::authorize('reject-access-request', $accessRequest);
+        Gate::authorize('approve-access-request', $accessRequest);
 
         $accessRequest->update([
             'rejected' => true,
