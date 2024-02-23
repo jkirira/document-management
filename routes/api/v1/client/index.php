@@ -44,6 +44,8 @@ Route::namespace('Api/v1/Client')->group(function() {
         Route::post('/folders/{folder}', [FoldersController::class, 'update']);
         Route::delete('/folders/{folder}', [FoldersController::class, 'destroy']);
 
+        Route::get('/folders/{folder}/content', [FoldersController::class, 'content']);
+
         Route::get('/categories', [UserCategoriesController::class, 'index']);
         Route::post('/categories', [UserCategoriesController::class, 'store']);
         Route::get('/categories/{id}', [UserCategoriesController::class, 'show']);

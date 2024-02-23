@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\FolderRequest;
 use App\Models\Folder;
 use App\Services\DocumentAccessService;
+use App\Transformers\Client\DocumentTransformer;
 use App\Transformers\Client\FolderTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -104,4 +105,30 @@ class FoldersController extends Controller
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
+    public function content(Request $request, Folder $folder)
+    {
+        $this->authorize('view', $folder);
+
+        $folders = $folder->childFolders()
+                        ->accessibleByUser($request->user())
+                        ->get()
+                        ->map(function ($folder) {
+                            $folder = (new FolderTransformer())->transform($folder);
+                            $folder['type'] = 'folder';
+                            return $folder;
+                        });
+
+        $documents = $folder->documents()
+                            ->accessibleByUser($request->user())
+                            ->get()
+                            ->map(function ($document) {
+                                $document = (new DocumentTransformer())->transform($document);
+                                $document['type'] = 'document';
+                                return $document;
+                            });
+
+        $content = array_merge($folders, $documents);
+
+        return response()->json($content, Response::HTTP_OK);
+    }
 }
