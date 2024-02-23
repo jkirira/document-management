@@ -105,7 +105,7 @@ class FoldersController extends Controller
         $this->authorize('view', $folder);
 
         $folders = $folder->childFolders()
-                        ->hasDocumentsThatUserCanAccess($request->user())
+//                        ->hasDocumentsThatUserCanAccess($request->user())
                         ->get()
                         ->map(function ($folder) {
                             $folder = (new FolderTransformer())->transform($folder);

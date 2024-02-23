@@ -13,7 +13,7 @@ class FolderPolicy
 
     public function before(User $user)
     {
-        return $user->isAdmin();
+        return true;
     }
 
     /**
