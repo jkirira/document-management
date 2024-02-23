@@ -3,9 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Document;
-use App\Models\DocumentAccess;
 use App\Models\User;
-use App\Services\DocumentAccessService;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class DocumentPolicy
@@ -32,7 +30,7 @@ class DocumentPolicy
      */
     public function view(User $user, Document $document)
     {
-        return (new DocumentAccessService())->documentIsAccessibleByUser($document, $user, DocumentAccess::ACCESS_ABILITIES['view']);
+        return Document::accessibleToUser($user, 'view')->where('id', $document->id)->exists();
     }
 
     /**
@@ -55,7 +53,7 @@ class DocumentPolicy
      */
     public function update(User $user, Document $document)
     {
-        return (new DocumentAccessService())->documentIsAccessibleByUser($document, $user, DocumentAccess::ACCESS_ABILITIES['update']);
+        return Document::accessibleToUser($user, 'update')->where('id', $document->id)->exists();
     }
 
     /**
@@ -67,7 +65,7 @@ class DocumentPolicy
      */
     public function download(User $user, Document $document)
     {
-        return (new DocumentAccessService())->documentIsAccessibleByUser($document, $user, DocumentAccess::ACCESS_ABILITIES['download']);
+        return Document::accessibleToUser($user, 'download')->where('id', $document->id)->exists();
     }
 
     /**
@@ -79,7 +77,7 @@ class DocumentPolicy
      */
     public function delete(User $user, Document $document)
     {
-        return (new DocumentAccessService())->documentIsAccessibleByUser($document, $user, DocumentAccess::ACCESS_ABILITIES['delete']);
+        return Document::accessibleToUser($user, 'delete')->where('id', $document->id)->exists();
     }
 
     /**

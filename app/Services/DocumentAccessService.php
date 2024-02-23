@@ -71,16 +71,6 @@ class DocumentAccessService
 
     }
 
-    public function documentIsAccessibleByEveryone(Document $document, $ability=null)
-    {
-        return Document::accessibleToEveryone($ability)->where('id', $document->id)->exists();
-    }
-
-    public function documentIsAccessibleByUser(Document $document, User $user, $ability=null)
-    {
-        return Document::accessibleToUser($user, $ability)->where('id', $document->id)->exists();
-    }
-
     public function folderIsAccessibleByUser(Folder $folder, User $user)
     {
         $foldersAccessibleByUser = $this->foldersAccessibleByUser($user);
