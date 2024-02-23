@@ -20,7 +20,6 @@ class FoldersController extends Controller
      */
     public function index(Request $request)
     {
-//        $folders = Folder::with(['parentFolder', 'childFolders'])->get();
         $folders = (new DocumentAccessService())->foldersAccessibleByUser($request->user());
 
         $folders = $folders->map(function ($folder) {
@@ -62,11 +61,7 @@ class FoldersController extends Controller
     public function show(Folder $folder)
     {
         $this->authorize('view', $folder);
-
-        $folder->load(['parentFolder', 'childFolders']);
-        $folder = (new FolderTransformer())->transform($folder);
-
-        return response()->json($folder, Response::HTTP_OK);
+        return response()->json((new FolderTransformer())->transform($folder), Response::HTTP_OK);
     }
 
     /**
