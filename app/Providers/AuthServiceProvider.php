@@ -46,7 +46,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('manage-access-managers', function (User $user, Document $document) {
+        Gate::define('manage-document-access-managers', function (User $user, Document $document) {
             return $user->isAdmin() || $user->isDocumentAccessManager($document);
         });
 
