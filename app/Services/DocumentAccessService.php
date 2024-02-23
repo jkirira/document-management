@@ -4,11 +4,9 @@
 namespace App\Services;
 
 
-use App\Models\Department;
 use App\Models\Document;
 use App\Models\DocumentAccess;
 use App\Models\Folder;
-use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
 
@@ -89,7 +87,7 @@ class DocumentAccessService
         return $foldersAccessibleByUser->contains('id', $folder->id);
     }
 
-    public function foldersAccessibleByUser(User $user)
+    public function foldersAccessibleByUser(User $user, $tree=false)
     {
         $folders = Folder::where(function($query) use ($user) {
                             $query->accessibleToUser($user, 'view');
@@ -105,20 +103,45 @@ class DocumentAccessService
             }
         }
 
-        return collect($parentFolders)->merge($folders)->unique('id');
+        $folders = collect($parentFolders)->merge($folders)->unique('id');
+
+        if ($tree) {
+            $folders = $folders->keyBy('id');
+
+            $folderWithLargestParentId = $this->findFolderWithLargestParentId($folders);
+
+            while ($folderWithLargestParentId) {
+                $parent = $folders[$folderWithLargestParentId->parent_id];
+
+                $parent['children'] = isset($parent['children'])
+                                        ? array_merge($parent['children'], [$folderWithLargestParentId])
+                                        : [ $folderWithLargestParentId ];
+
+                unset($folders[$folderWithLargestParentId->id]);
+
+                $folderWithLargestParentId = $this->findFolderWithLargestParentId($folders);
+
+            }
+
+        }
+
+        return $folders;
     }
 
-    private function getParentFolders($childFolders, $folderIdsToIgnore = [])
-    {
-        $parentIds = collect([]);
+    private function findFolderWithLargestParentId($folders=[]) {
+        $folderWithLargestParentId = null;
 
-        $childFolders->each(function($childFolder) use ($parentIds, $folderIdsToIgnore) {
-            if (isset($childFolder->parent_id) && !in_array($childFolder->parent_id, $folderIdsToIgnore)) {
-                $parentIds->push($childFolder->parent_id);
+        foreach ($folders as $folder) {
+            if (
+                isset($folder->parent_id)
+                &&
+                (!$folderWithLargestParentId || $folderWithLargestParentId->parent_id < $folder->parent_id))
+            {
+                $folderWithLargestParentId = $folder;
             }
-        });
+        }
 
-        return Folder::whereIn('id', $parentIds)->get();
+        return $folderWithLargestParentId;
     }
 
     public function revokeAccess(DocumentAccess $access)
@@ -131,6 +154,5 @@ class DocumentAccessService
         return $access;
 
     }
-
 
 }
