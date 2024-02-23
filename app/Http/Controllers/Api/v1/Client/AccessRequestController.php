@@ -82,7 +82,7 @@ class AccessRequestController extends Controller
 
     public function approve(Request $request, AccessRequest $accessRequest)
     {
-        Gate::authorize('approve-access-request', $accessRequest);
+        $this->authorize('approveOrRevoke', $accessRequest);
 
         $accessRequest = DB::transaction(function () use ($accessRequest) {
 
@@ -117,7 +117,7 @@ class AccessRequestController extends Controller
 
     public function reject(Request $request, AccessRequest $accessRequest)
     {
-        Gate::authorize('approve-access-request', $accessRequest);
+        $this->authorize('approveOrRevoke', $accessRequest);
 
         $accessRequest->update([
             'rejected' => true,
