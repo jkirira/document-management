@@ -80,7 +80,7 @@ class DocumentAccessService
     public function foldersAccessibleByUser(User $user, $tree=false)
     {
         $folders = Folder::where(function($query) use ($user) {
-                            $query->accessibleToUser($user, 'view');
+                            $query->hasDocumentsThatUserCanAccess($user, 'view');
                         })
                         ->get();
 

@@ -48,7 +48,7 @@ class Folder extends Model
                     });
     }
 
-    public function scopeAccessibleToUser($query, User $user, $ability=null)
+    public function scopeHasDocumentsThatUserCanAccess($query, User $user, $ability=null)
     {
         return $query->whereHas('documents', function ($documents) use ($user, $ability) {
                         $documents->accessibleToUser($user, $ability);
