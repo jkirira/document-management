@@ -1,5 +1,5 @@
 <?php
-namespace App\Transformers\Admin;
+namespace App\Transformers\Client;
 
 use App\Models\User;
 
@@ -11,14 +11,6 @@ class UserTransformer
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            'roles' => (bool)count($user->roles)
-                        ? $user->roles->map(function($role) {
-                                            return [
-                                                'id' => $role->id,
-                                                'name' => $role->name,
-                                            ];
-                                        })
-                        : null,
             'department' => isset($user->department)
                             ? [
                                 'id' => $user->department->id,

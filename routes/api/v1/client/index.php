@@ -8,12 +8,16 @@ use App\Http\Controllers\Api\v1\Client\DocumentHistoryController;
 use App\Http\Controllers\Api\v1\Client\DocumentsController;
 use App\Http\Controllers\Api\v1\Client\FoldersController;
 use App\Http\Controllers\Api\v1\Client\UserAccessController;
+use App\Http\Controllers\Api\v1\Client\UsersController;
 use Illuminate\Support\Facades\Route;
 
 
 Route::namespace('Api/v1/Client')->group(function() {
 
     Route::middleware('auth:sanctum')->group(function () {
+
+        Route::get('/users', [UsersController::class, 'index']);
+        Route::get('/users/{id}', [UsersController::class, 'show']);
 
         Route::get('/documents', [DocumentsController::class, 'index']);
         Route::post('/documents', [DocumentsController::class, 'store']);
