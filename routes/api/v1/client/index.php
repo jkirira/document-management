@@ -33,6 +33,7 @@ Route::namespace('Api/v1/Client')->group(function() {
         Route::delete('/documents/{document}/access-managers/{id}', [DocumentAccessManagersController::class, 'destroy']);
 
         Route::get('/document-access', [DocumentAccessController::class, 'index']);
+        Route::get('/document-access/access-abilities', [DocumentAccessController::class, 'accessAbilities']);
         Route::post('/document-access', [DocumentAccessController::class, 'store']);
         Route::get('/document-access/{id}', [DocumentAccessController::class, 'show']);
         Route::post('/document-access/{id}', [DocumentAccessController::class, 'update']);

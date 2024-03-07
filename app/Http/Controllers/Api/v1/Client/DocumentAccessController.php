@@ -120,4 +120,17 @@ class DocumentAccessController extends Controller
         return response()->json([], Response::HTTP_CREATED);
     }
 
+    public function accessAbilities()
+    {
+        $abilities = collect(DocumentAccess::ACCESS_ABILITIES)
+                        ->map(function ($ability) {
+                            return [
+                                'name' => $ability,
+                            ];
+                        })
+                        ->values();
+
+        return response()->json($abilities, Response::HTTP_OK);
+    }
+
 }
