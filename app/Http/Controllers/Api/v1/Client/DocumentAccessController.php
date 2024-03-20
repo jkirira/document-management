@@ -16,11 +16,52 @@ use Illuminate\Support\Facades\Gate;
 
 class DocumentAccessController extends Controller
 {
-    public function index()
+    public function index(Request $request, $document_id=null)
     {
         // add maybe only admin authorization
         $documentAccess = DocumentAccess::query()
 //                                    ->normalAccess()
+                                    ->when(isset($document_id), function ($query) use ($document_id) {
+                                        return $query->where('document_id', $document_id);
+                                    })
+                                    ->when((isset($request->filter) && isset($request->filterBy)), function($query) use ($request) {
+                                        if ($request->filterBy == 'department') {
+                                            if ($request->filter == 'all') {
+                                                return $query->where('all_departments', true);
+                                            } else {
+                                                return $query->where('department_id', $request->filter);
+                                            }
+                                        }
+
+                                        if ($request->filterBy == 'role') {
+                                            if ($request->filter == 'all') {
+                                                return $query->where('all_roles', true);
+                                            } else {
+                                                return $query->where('role_id', $request->filter);
+                                            }
+                                        }
+
+                                        if ($request->filterBy == 'user') {
+                                            return $query->where('user_id', $request->filter);
+                                        }
+
+                                        if ($request->filterBy == 'expiry') {
+                                            if ($request->filter == 'expired') {
+                                                return $query->where('expired', true);
+                                            } else {
+                                                return $query->whereNull('expired');
+                                            }
+                                        }
+
+                                        if ($request->filterBy == 'active') {
+                                            if ($request->filter == 'revoked') {
+                                                return $query->where('revoked', true);
+                                            } else {
+                                                return $query->whereNull('revoked');
+                                            }
+                                        }
+                                    })
+                                    ->orderBy('id', 'desc')
                                     ->get()
                                     ->map(function($access) {
                                         return (new DocumentAccessTransformer())->transform($access);
@@ -46,6 +87,9 @@ class DocumentAccessController extends Controller
         // add maybe only admin authorization
 //        $access = DocumentAccess::normalAccess()->findOrFail($id);
         $access = DocumentAccess::findOrFail($id);
+
+        Gate::authorize('manage-document-access', $access->document);
+
         return response()->json((new DocumentAccessTransformer())->transform($access), Response::HTTP_OK);
     }
 
@@ -85,19 +129,6 @@ class DocumentAccessController extends Controller
         (new DocumentAccessService())->revokeAccess($access);
 
         return response()->json(null, Response::HTTP_OK);
-    }
-
-    public function documentAccess(Document $document)
-    {
-        // add maybe only admin authorization
-        $documentAccess = $document->access()
-//                                    ->normalAccess()
-                                    ->get()
-                                    ->map(function($access) {
-                                        return (new DocumentAccessTransformer())->transform($access);
-                                    });
-
-        return response()->json($documentAccess, Response::HTTP_OK);
     }
 
     public function updateDocumentAccess(UpdateDocumentAccessRequest $request, Document $document)

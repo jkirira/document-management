@@ -32,6 +32,7 @@ Route::namespace('Api/v1/Client')->group(function() {
         Route::get('/documents/{document}/access-managers/{id}', [DocumentAccessManagersController::class, 'show']);
         Route::delete('/documents/{document}/access-managers/{id}', [DocumentAccessManagersController::class, 'destroy']);
 
+        Route::get('/documents/{document_id}/document-access', [DocumentAccessController::class, 'index']);
         Route::get('/document-access', [DocumentAccessController::class, 'index']);
         Route::get('/document-access/access-abilities', [DocumentAccessController::class, 'accessAbilities']);
         Route::post('/document-access', [DocumentAccessController::class, 'store']);
@@ -40,7 +41,6 @@ Route::namespace('Api/v1/Client')->group(function() {
         Route::post('/document-access/{id}/revoke', [DocumentAccessController::class, 'revoke']);
         Route::delete('/document-access/{id}', [DocumentAccessController::class, 'destroy']);
 
-        Route::get('/documents/{document}/document-access', [DocumentAccessController::class, 'documentAccess']);
         Route::post('/documents/{document}/document-access/update-access', [DocumentAccessController::class, 'updateDocumentAccess']);
 
         Route::get('/folders', [FoldersController::class, 'index']);

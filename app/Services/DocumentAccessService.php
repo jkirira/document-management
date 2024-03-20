@@ -32,7 +32,12 @@ class DocumentAccessService
 
         $access->user_id = isset($values['user_id']) ? $values['user_id'] : null;
 
-        $access->expires_at = isset($values['expires_at']) ? $values['expires_at'] : null;
+        if (isset($values['expiry_date']) && isset($values['expiry_time'])) {
+            $expiry_time_string = Carbon::parse($values['expiry_time'])->format('H:i');
+            $access->expires_at = Carbon::parse($values['expiry_date'])
+                                        ->setTimeFromTimeString($expiry_time_string)
+                                        ->toDateTimeString();
+        }
 
         foreach(DocumentAccess::ACCESS_ABILITIES as $accessType) {
             $value = isset($values[$accessType]) ? (bool)$values[$accessType] : false;
@@ -58,7 +63,12 @@ class DocumentAccessService
 
 //        $access->user_id = isset($values['user_id']) ? $values['user_id'] : $access->user_id;
 
-        $access->expires_at = isset($values['expires_at']) ? $values['expires_at'] : $access->expires_at;
+        if (isset($values['expiry_date']) && isset($values['expiry_time'])) {
+            $expiry_time_string = Carbon::parse($values['expiry_time'])->format('H:i');
+            $access->expires_at = Carbon::parse($values['expiry_date'])
+                                        ->setTimeFromTimeString($expiry_time_string)
+                                        ->toDateTimeString();
+        }
 
         foreach(DocumentAccess::ACCESS_ABILITIES as $accessType) {
             $value = isset($values[$accessType]) ? (bool)$values[$accessType] : false;

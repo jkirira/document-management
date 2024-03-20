@@ -37,13 +37,15 @@ class DocumentAccessTransformer
             'view' => (bool)$documentAccess->view,
             'delete' => (bool)$documentAccess->delete,
             'download' => (bool)$documentAccess->download,
-            'revoked' => (bool)$documentAccess->revoked,
+            'expired' => (bool)$documentAccess->expired,
+            'expires_at' => $documentAccess->expires_at,
             'granted_by' => isset($documentAccess->grantedBy)
                                 ?   [
                                     'id' => $documentAccess->grantedBy->id,
                                     'name' => $documentAccess->grantedBy->name,
                                 ]
                                 : null,
+            'revoked' => (bool)$documentAccess->revoked,
             'revoked_by' => isset($documentAccess->revokedBy)
                                 ?   [
                                     'id' => $documentAccess->revokedBy->id,

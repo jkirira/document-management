@@ -44,11 +44,17 @@ class DocumentAccessRequest extends FormRequest
                 'required_without:all_roles',
                 'required_if:all_roles,false',
             ],
-            'user_id' => 'prohibited',
+//            'user_id' => 'prohibited',
+            'user_id' => [
+                'nullable',
+                Rule::exists('users', 'id')->withoutTrashed(),
+            ],
             'update' => 'required|boolean',
             'view' => 'required|boolean',
             'delete' => 'required|boolean',
             'download' => 'required|boolean',
+            'expiry_date' => 'nullable|date|after:yesterday',
+            'expiry_time' => 'nullable|date_format:H:i|required_with:expiry_date',
         ];
 
         if($this->id) {
@@ -56,7 +62,6 @@ class DocumentAccessRequest extends FormRequest
         }
 
         return $rules;
-
     }
 
 }
