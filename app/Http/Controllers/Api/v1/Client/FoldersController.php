@@ -22,6 +22,30 @@ class FoldersController extends Controller
     {
         $folders = (new DocumentAccessService())->foldersAccessibleByUser($request->user());
 
+        if (isset($request->search)) {
+            $allFolders = Folder::search($request->search)->get();
+            $ids = $folders->pluck('id')->all();
+
+            $folders = $allFolders->filter(function ($folder) use ($ids) {
+                            return in_array($folder->id, $ids);
+                        });
+        }
+
+        $query = $request->query();
+        if (isset($query['type'])) {
+            if ($query['type'] == 'root') {
+                $folders = $folders->filter(function ($folder) {
+                                return !isset($folder->parent_id);
+                            });
+
+            } elseif ($query['type'] == 'non_root') {
+                $folders = $folders->filter(function ($folder) {
+                                return isset($folder->parent_id);
+                            });
+
+            }
+        }
+
         $folders = $folders->map(function ($folder) {
                         return (new FolderTransformer())->transform($folder);
                     });
@@ -104,26 +128,38 @@ class FoldersController extends Controller
     {
         $this->authorize('view', $folder);
 
-        $folders = $folder->childFolders()
-//                        ->hasDocumentsThatUserCanAccess($request->user())
-                        ->get()
-                        ->map(function ($folder) {
-                            $folder = (new FolderTransformer())->transform($folder);
-                            $folder['type'] = 'folder';
-                            return $folder;
-                        });
+        $data = [];
 
-        $documents = $folder->documents()
-                            ->accessibleByUser($request->user())
+        $query = $request->query();
+
+        if (!isset($query['content_type']) || in_array($query['content_type'], ['all', 'folders'])) {
+            $accessibleFolders = (new DocumentAccessService())->foldersAccessibleByUser($request->user());
+            $folders = $folder->childFolders()
+//                        ->hasDocumentsThatUserCanAccess($request->user())
+                            ->whereIn('id', $accessibleFolders->pluck('id'))
                             ->get()
-                            ->map(function ($document) {
-                                $document = (new DocumentTransformer())->transform($document);
-                                $document['type'] = 'document';
-                                return $document;
+                            ->map(function ($folder) {
+                                $folder = (new FolderTransformer())->transform($folder);
+                                $folder['type'] = 'folder';
+                                return $folder;
                             });
 
-        $content = array_merge($folders, $documents);
+            $data = isset($data) ? collect($data)->merge($folders)->all() : $folders;
+        }
 
-        return response()->json($content, Response::HTTP_OK);
+        if (!isset($query['content_type']) || in_array($query['content_type'], ['all', 'documents'])) {
+            $documents = $folder->documents()
+                                ->accessibleToUser($request->user())
+                                ->get()
+                                ->map(function ($document) {
+                                    $document = (new DocumentTransformer())->transform($document);
+                                    $document['type'] = 'document';
+                                    return $document;
+                                });
+
+            $data = isset($data) ? collect($data)->merge($documents)->all() : $documents;
+        }
+
+        return response()->json($data, Response::HTTP_OK);
     }
 }

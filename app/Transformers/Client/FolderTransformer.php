@@ -10,26 +10,19 @@ class FolderTransformer
         $transformed = [
             'id' => $folder->id,
             'name' => $folder->name,
+            'parent_id' => $folder->parent_id,
         ];
 
         if($withChildren) {
             $childFolders = $folder->childFolders;
             $transformed['child_folders'] = $childFolders->map(function ($childFolder) {
-                                                return [
-                                                    'id' => $childFolder->id,
-                                                    'name' => $childFolder->name,
-                                                ];
+                                                return $this->transform($childFolder);
                                             });
         }
 
         if($withParent) {
             $parentFolder = $folder->parentFolder;
-            $transformed['parent_folder'] = isset($parentFolder)
-                                                ? [
-                                                    'id' => $parentFolder->id,
-                                                    'name' => $parentFolder->name,
-                                                ]
-                                                : null;
+            $transformed['parent_folder'] = isset($parentFolder) ? $this->transform($parentFolder) : null;
         }
 
         return $transformed;
@@ -44,7 +37,7 @@ class FolderTransformer
             $childFolders = $childFolders->filter($filterFunction);
         }
 
-        $transformed['children'] = $childFolders->map(function ($childFolder) use ($filterFunction) {
+        $transformed['child_folders'] = $childFolders->map(function ($childFolder) use ($filterFunction) {
                                         return $this->treeFromRoot($childFolder, $filterFunction);
                                     })
                                     ->all();

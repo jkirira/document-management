@@ -5,15 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Folder extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, SearchableTrait;
 
     protected $table = 'folders';
 
     protected $guarded = [
         'id',
+    ];
+
+    protected $searchable = [
+        'columns' => [
+            'name' => 10,
+        ],
     ];
 
     public function documents()
