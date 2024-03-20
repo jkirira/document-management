@@ -50,6 +50,7 @@ Route::namespace('Api/v1/Client')->group(function() {
         Route::delete('/folders/{folder}', [FoldersController::class, 'destroy']);
 
         Route::get('/folders/{folder}/content', [FoldersController::class, 'content']);
+        Route::get('/folders/{folder}/breadcrumbs', [FoldersController::class, 'breadcrumbs']);
 
         Route::get('/categories', [UserCategoriesController::class, 'index']);
         Route::post('/categories', [UserCategoriesController::class, 'store']);

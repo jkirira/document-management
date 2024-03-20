@@ -162,4 +162,18 @@ class FoldersController extends Controller
 
         return response()->json($data, Response::HTTP_OK);
     }
+
+    public function breadcrumbs(Folder $folder)
+    {
+        $breadcrumbs = [(new FolderTransformer())->transform($folder)];
+
+        $currentFolder = $folder;
+        while($currentFolder->parent_id) {
+            array_unshift($breadcrumbs, (new FolderTransformer())->transform($currentFolder->parentFolder));
+            $currentFolder = $currentFolder->parentFolder;
+        }
+
+        return response()->json($breadcrumbs, Response::HTTP_OK);
+    }
+
 }
