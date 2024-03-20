@@ -25,7 +25,8 @@ class DocumentAccessManagerRequest extends FormRequest
     public function rules()
     {
         return [
-            'access_managers.*' => [Rule::exists('users', 'id')->whereNull('deleted_at')],
+            'user_id' => [Rule::exists('users', 'id')->whereNull('deleted_at')],
+//            'access_managers.*' => [Rule::exists('users', 'id')->whereNull('deleted_at')],
         ];
     }
 

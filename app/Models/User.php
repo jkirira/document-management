@@ -40,7 +40,7 @@ class User extends Authenticatable
     protected $searchable = [
         'columns' => [
             'name' => 10,
-            'email' => 10,
+            'email' => 5,
         ],
     ];
 
