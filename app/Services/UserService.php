@@ -19,15 +19,15 @@ class UserService
     public function createUser($data)
     {
         $user = User::create([
-            'email' => $data['email'],
             'name' => $data['name'],
+            'email' => $data['email'],
             'department_id' => $data['department_id'],
         ]);
 
         if ($user) {
 
-            if (isset($data['roles'])) {
-                $user->roles()->sync($data['roles']);
+            if (isset($data['role_ids'])) {
+                $user->roles()->sync($data['role_ids']);
             }
 
         }
@@ -38,12 +38,14 @@ class UserService
 
     public function updateUser(User $user, $data)
     {
-        $userInfo = Arr::except($data, ['roles']);
+        $user->update([
+            'name' => isset($data['name']) ? $data['name'] : $user->name,
+            'email' => isset($data['email']) ? $data['email'] : $user->email,
+            'department_id' => isset($data['department_id']) ? $data['department_id'] : $user->department_id,
+        ]);
 
-        $user->update($userInfo);
-
-        if(isset($data['roles'])) {
-            $user->roles()->sync($data['roles']);
+        if(isset($data['role_ids'])) {
+            $user->roles()->sync($data['role_ids']);
         }
 
         return $user->fresh();

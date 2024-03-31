@@ -28,8 +28,8 @@ class UserRequest extends FormRequest
         $rules = [
             'name' => 'required',
             'email' => 'required|unique:users,email',
-            'roles' => 'array',
-            'roles.*' => [Rule::exists('roles', 'id')->withoutTrashed()],
+            'role_ids' => 'array',
+            'role_ids.*' => [Rule::exists('roles', 'id')->withoutTrashed()],
             'department_id' => [Rule::exists('departments', 'id')->withoutTrashed()],
         ];
 
